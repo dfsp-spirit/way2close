@@ -16,6 +16,11 @@ public class SpawnEnemies : MonoBehaviour {
         currentWave = 0;
         levelText.text = "Wave " + currentWave.ToString();
 
+        for(int i = 0; i < numInitialEnemies; i++)
+        {
+            Spawn();
+        }
+
     }
 	
     void Spawn()
@@ -23,7 +28,7 @@ public class SpawnEnemies : MonoBehaviour {
         int objectRenderHeight = 150;
         int objectRenderWidth = 150;
         Vector3 spawnPos = new Vector3();
-        spawnPos.x = Screen.width + objectRenderWidth;
+        spawnPos.x = Screen.width + objectRenderWidth + Random.Range(0, objectRenderWidth * 5);
         spawnPos.y = Random.Range(0 + objectRenderHeight, Screen.height - objectRenderHeight);
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);

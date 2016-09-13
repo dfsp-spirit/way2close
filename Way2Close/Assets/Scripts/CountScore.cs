@@ -14,44 +14,60 @@ public class CountScore : MonoBehaviour {
     int multiplier;
     int layerMaskEnemies = 1 << 9;
     LineRenderer lineRenderer;
+    List<LineRenderer> lineRenderers;
     GameObject player;
-    List<Vector3> myPoints;
+    int numInitialEnemies = 4;
 
     void Start () {
         score = 0;        
-        //lineRenderer = Camera.main.GetComponent<LineRenderer>();
-        //lineRenderer.enabled = false;
-        player = GameObject.FindWithTag("Player");        
+        player = GameObject.FindWithTag("Player");
+        lineRenderers = new List<LineRenderer>();
+
+        for(int i = 0; i < numInitialEnemies; i++)
+        {
+            addLineRenderer(lineRenderers);
+        }
+
 
         
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
+
+       
+    }
+	
+    void addLineRenderer(List<LineRenderer> lineRenderers)
+    {
+        GameObject objToSpawn = new GameObject("LineRendererHolder" + lineRenderers.Count.ToString());
+        lineRenderer = objToSpawn.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         lineRenderer.SetColors(Color.white, Color.white);
         lineRenderer.SetWidth(0.05F, 0.05F);
         lineRenderer.SetVertexCount(2);
         lineRenderer.sortingLayerName = "Front";
+        lineRenderers.Add(lineRenderer);
     }
-	
 
-	void Update () {
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        myPoints = new List<Vector3>();
-        //float t = Time.time;
-        //int i = 0;
-        //while (i < lengthOfLineRenderer)
-        //{
-        //    Vector3 pos = new Vector3(i * 0.5F, Mathf.Sin(i + t), 0);
-        //    lineRenderer.SetPosition(i, pos);
-        //    i++;
-        //}
+
+    void Update () {
+        //LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        LineRenderer lineRenderer = lineRenderers[0];
 
         multiplier = 1;
         Vector3 playerCenter = player.GetComponent<Renderer>().bounds.center;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        string positionInfo = "";
-        foreach (GameObject enemy in enemies)
+        if(lineRenderers.Count < enemies.Length)
         {
+            int diff = enemies.Length - lineRenderers.Count;
+            for(int i = 0; i < diff; i++)
+            {
+                addLineRenderer(lineRenderers);
+            }
+        }
+
+        string positionInfo = "";
+        for(int i = 0; i < enemies.Length; i++)
+        {
+            GameObject enemy = enemies[i];
             positionInfo += " " + enemy.transform.position;
             //lineRenderer.enabled = true;            
             //lineRenderer.enabled = true;
@@ -60,14 +76,14 @@ public class CountScore : MonoBehaviour {
             if(distance.sqrMagnitude < 5.0F)
             {
                 multiplier++;
-                lineRenderer.enabled = true;
-                lineRenderer.SetPosition(0, player.transform.position);
-                lineRenderer.SetPosition(1, enemy.transform.position);
+                lineRenderers[i].enabled = true;
+                lineRenderers[i].SetPosition(0, player.transform.position);
+                lineRenderers[i].SetPosition(1, enemy.transform.position);
                 //Gizmos.DrawLine(player.transform.position, enemy.transform.position);
             }
             else
             {
-                lineRenderer.enabled = false;
+                lineRenderers[i].enabled = false;
             }
             
         }
