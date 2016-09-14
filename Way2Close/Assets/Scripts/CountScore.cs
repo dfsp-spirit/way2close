@@ -16,11 +16,14 @@ public class CountScore : MonoBehaviour {
     LineRenderer lineRenderer;
     List<LineRenderer> lineRenderers;
     GameObject player;
-    int numInitialEnemies = 4;
+    int numInitialEnemies;
+    SpawnEnemies spawnEnemiesScript;
 
     void Start () {
         score = 0;        
         player = GameObject.FindWithTag("Player");
+        spawnEnemiesScript = GetComponent<SpawnEnemies>();
+        numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
         lineRenderers = new List<LineRenderer>();
 
         for(int i = 0; i < numInitialEnemies; i++)
@@ -88,7 +91,7 @@ public class CountScore : MonoBehaviour {
             
         }
 
-        Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
+        //Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
         //printEnemyPos();
 
         score += multiplier * (Time.deltaTime * scorePerSecond);
