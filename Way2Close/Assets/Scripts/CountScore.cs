@@ -7,12 +7,18 @@ public class CountScore : MonoBehaviour {
 
     public Text scoreText;
     public Text multiplierText;
+
+    public GameObject uiPanel;
+    public Text textDeadTitle;
+    public Text textDeadLine1;
+
     float scoreOuterRadius = 5.0F;
     float scoreInnerRadius = 2.5F;
     float scorePerSecond = 1.0F;
     float score;
+    float beginningHighscore;
     int multiplier;
-    int layerMaskEnemies = 1 << 9;
+    bool addScore;
     LineRenderer lineRenderer;
     List<LineRenderer> lineRenderers;
     GameObject player;
@@ -20,7 +26,8 @@ public class CountScore : MonoBehaviour {
     SpawnEnemies spawnEnemiesScript;
 
     void Start () {
-        score = 0;        
+        score = 0;
+        addScore = true;
         player = GameObject.FindWithTag("Player");
         spawnEnemiesScript = GetComponent<SpawnEnemies>();
         numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
@@ -31,10 +38,12 @@ public class CountScore : MonoBehaviour {
             addLineRenderer(lineRenderers);
         }
 
-
-        
-
-       
+        beginningHighscore = 0.0F;
+        if(PlayerPrefs.HasKey("Highscore"))
+        {
+            beginningHighscore = PlayerPrefs.GetFloat("Highscore");
+        }
+        uiPanel.SetActive(false);
     }
 	
     void addLineRenderer(List<LineRenderer> lineRenderers)
@@ -51,8 +60,6 @@ public class CountScore : MonoBehaviour {
 
 
     void Update () {
-        //LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        LineRenderer lineRenderer = lineRenderers[0];
 
         multiplier = 1;
         Vector3 playerCenter = player.GetComponent<Renderer>().bounds.center;
@@ -76,12 +83,22 @@ public class CountScore : MonoBehaviour {
             //lineRenderer.enabled = true;
 
             Vector3 distance = player.transform.position - enemy.transform.position;
-            if(distance.sqrMagnitude < 5.0F)
+            if(distance.sqrMagnitude < scoreOuterRadius)
             {
                 multiplier++;
                 lineRenderers[i].enabled = true;
                 lineRenderers[i].SetPosition(0, player.transform.position);
                 lineRenderers[i].SetPosition(1, enemy.transform.position);
+
+                if (distance.sqrMagnitude < scoreInnerRadius)
+                {
+                    multiplier++;
+                    lineRenderers[i].SetColors(Color.red, Color.red);
+                }
+                else
+                {
+                    lineRenderers[i].SetColors(Color.white, Color.white);
+                }
                 //Gizmos.DrawLine(player.transform.position, enemy.transform.position);
             }
             else
@@ -94,23 +111,46 @@ public class CountScore : MonoBehaviour {
         //Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
         //printEnemyPos();
 
-        score += multiplier * (Time.deltaTime * scorePerSecond);
         scoreText.text = "Score: " + score.ToString("n2");
-        multiplierText.text = multiplier.ToString() + "x";
-        multiplierText.fontSize = 20 + (2 * multiplier);
+        multiplierText.text = "-";
+        multiplierText.fontSize = 20;
         multiplierText.color = Color.white;
-        if (multiplier >= 2)
+        if (addScore)
         {
-            multiplierText.color = Color.yellow;
+            score += multiplier * (Time.deltaTime * scorePerSecond);            
+            multiplierText.text = multiplier.ToString() + "x";
+            multiplierText.fontSize = 20 + (2 * multiplier);
+            if (multiplier >= 2)
+            {
+                multiplierText.color = Color.yellow;
+            }
+            if (multiplier >= 4)
+            {
+                multiplierText.color = Color.magenta;
+            }
+            if (multiplier >= 6)
+            {
+                multiplierText.color = Color.red;
+            }
         }
-        if (multiplier >= 4)
+    }
+
+    void StopAddingScore()
+    {
+        addScore = false;
+    }
+
+    void ShowHighscore()
+    {
+        textDeadTitle.text = "YOU ARE DEAD";
+        textDeadLine1.text = "Score: " + score.ToString("n2");
+        if (score > beginningHighscore)
         {
-            multiplierText.color = Color.magenta;
+            PlayerPrefs.SetFloat("Highscore", score);
+            PlayerPrefs.Save();
+            textDeadLine1.text = "New Highscore: " + score.ToString("n2");
         }
-        if (multiplier >= 6)
-        {
-            multiplierText.color = Color.red;
-        }
+        uiPanel.SetActive(true);
     }
 
     void printEnemyPos()
