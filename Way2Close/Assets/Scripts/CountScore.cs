@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class CountScore : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class CountScore : MonoBehaviour {
     public GameObject uiPanel;
     public Text textDeadTitle;
     public Text textDeadLine1;
+    public Text textDeadLine2;
 
     float scoreOuterRadius = 5.0F;
     float scoreInnerRadius = 2.5F;
@@ -112,6 +114,15 @@ public class CountScore : MonoBehaviour {
         //printEnemyPos();
 
         scoreText.text = "Score: " + score.ToString("n2");
+        if(score > beginningHighscore)
+        {
+            scoreText.color = Color.red;
+        }
+        else
+        {
+            scoreText.color = Color.white;
+        }
+
         multiplierText.text = "-";
         multiplierText.fontSize = 20;
         multiplierText.color = Color.white;
@@ -144,11 +155,13 @@ public class CountScore : MonoBehaviour {
     {
         textDeadTitle.text = "YOU ARE DEAD";
         textDeadLine1.text = "Score: " + score.ToString("n2");
+        textDeadLine2.text = "Highscore: " + beginningHighscore.ToString("n2");
         if (score > beginningHighscore)
         {
             PlayerPrefs.SetFloat("Highscore", score);
             PlayerPrefs.Save();
-            textDeadLine1.text = "New Highscore: " + score.ToString("n2");
+            textDeadLine1.text = "New Highscore!";
+            textDeadLine2.text = score.ToString("n2");
         }
         uiPanel.SetActive(true);
     }
@@ -170,5 +183,10 @@ public class CountScore : MonoBehaviour {
             Debug.Log("Found enemy in distance " + distance.ToString() + ". Magnitude is " + distance.magnitude.ToString() + ". SqrMagnitude is " + distance.sqrMagnitude.ToString() + ".");
         }
         Debug.Log("Found " + enemies.Length.ToString() + " enemies:" + positionInfo);
+    }
+
+    public void LoadLevel(int index)
+    {
+        SceneManager.LoadScene(index);
     }
 }
