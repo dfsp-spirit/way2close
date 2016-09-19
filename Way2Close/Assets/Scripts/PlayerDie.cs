@@ -17,6 +17,8 @@ public class PlayerDie : MonoBehaviour {
             GameObject gc = GameObject.FindGameObjectWithTag("GameController");
             gc.SendMessage("StopAddingScore");
             gc.SendMessage("ShowHighscore");
+            gc.SendMessage("StopSpawning");
+            gc.SendMessage("StopUpdatingLevelTime");
         }            
     }
 

@@ -63,7 +63,7 @@ public class CountScore : MonoBehaviour {
 
     void Update () {
 
-        multiplier = 1;
+        multiplier = 1 + spawnEnemiesScript.currentWave;
         Vector3 playerCenter = player.GetComponent<Renderer>().bounds.center;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -123,27 +123,31 @@ public class CountScore : MonoBehaviour {
             scoreText.color = Color.white;
         }
 
-        multiplierText.text = "-";
-        multiplierText.fontSize = 20;
-        multiplierText.color = Color.white;
         if (addScore)
         {
-            score += multiplier * (Time.deltaTime * scorePerSecond);            
-            multiplierText.text = multiplier.ToString() + "x";
-            multiplierText.fontSize = 20 + (2 * multiplier);
-            if (multiplier >= 2)
-            {
-                multiplierText.color = Color.yellow;
-            }
-            if (multiplier >= 4)
-            {
-                multiplierText.color = Color.magenta;
-            }
-            if (multiplier >= 6)
-            {
-                multiplierText.color = Color.red;
-            }
+            score += multiplier * (Time.deltaTime * scorePerSecond);
         }
+        multiplierText.text = multiplier.ToString() + "x";
+        multiplierText.fontSize = 20 + (2 * multiplier);
+        multiplierText.fontSize = Mathf.Min(multiplierText.fontSize, 40);
+        multiplierText.color = Color.white;
+        if (multiplier >= 2)
+        {
+            multiplierText.color = Color.green;
+        }
+        if (multiplier >= 4)
+        {
+            multiplierText.color = Color.yellow;
+        }
+        if (multiplier >= 6)
+        {
+            multiplierText.color = Color.magenta;
+        }
+        if (multiplier >= 8)
+        {
+            multiplierText.color = Color.red;
+        }
+        
     }
 
     void StopAddingScore()
