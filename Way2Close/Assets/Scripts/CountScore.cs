@@ -46,6 +46,7 @@ public class CountScore : MonoBehaviour {
             beginningHighscore = PlayerPrefs.GetFloat("Highscore");
         }
         uiPanel.SetActive(false);
+        uiPanel.gameObject.SetActive(false);
     }
 	
     void addLineRenderer(List<LineRenderer> lineRenderers)
@@ -168,6 +169,7 @@ public class CountScore : MonoBehaviour {
             textDeadLine2.text = score.ToString("n2");
         }
         uiPanel.SetActive(true);
+        uiPanel.gameObject.SetActive(true);
     }
 
     void printEnemyPos()
@@ -192,5 +194,16 @@ public class CountScore : MonoBehaviour {
     public void LoadLevel(int index)
     {
         SceneManager.LoadScene(index);
+    }
+
+    public void ButtonRestartLevelClicked()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        
+    }
+
+    public void ButtonToMainMenuClicked()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
