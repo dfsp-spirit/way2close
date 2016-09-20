@@ -11,14 +11,15 @@ public class PlayerDie : MonoBehaviour {
         Debug.Log("Collision involving player.");
         if (other.gameObject.tag == "Enemy")
         {
-            Debug.Log(" Player collided with enemy.");
+            Debug.Log("Player collided with enemy.");
             KillMe();
             StopEnemies();
             GameObject gc = GameObject.FindGameObjectWithTag("GameController");
-            gc.SendMessage("StopAddingScore");
-            gc.SendMessage("ShowHighscore");
+            gc.SendMessage("StopAddingScore");            
             gc.SendMessage("StopSpawning");
             gc.SendMessage("StopUpdatingLevelTime");
+            gc.SendMessage("UpdateHighscoreText");
+            gc.SendMessage("ShowHighScorePanel");
         }            
     }
 

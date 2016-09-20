@@ -35,7 +35,7 @@ public class SpawnEnemies : MonoBehaviour {
     void NextWave()
     {
         currentWave++;
-        levelText.text = "Wave " + currentWave.ToString();
+        levelText.text = "Wave: " + currentWave.ToString();
 
         for (int i = 0; i < numEnemiesAddedPerWave; i++)
         {

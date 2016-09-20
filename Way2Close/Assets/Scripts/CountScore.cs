@@ -8,6 +8,8 @@ public class CountScore : MonoBehaviour {
 
     public Text scoreText;
     public Text multiplierText;
+    public Material lineRendererMaterialOuterRadius;
+    public Material lineRendererMaterialInnerRadius;
 
     public GameObject uiPanel;
     public Text textDeadTitle;
@@ -28,7 +30,8 @@ public class CountScore : MonoBehaviour {
     SpawnEnemies spawnEnemiesScript;
 
     void Start () {
-        score = 0;
+        score = 0.0F;
+        multiplier = 1;
         addScore = true;
         player = GameObject.FindWithTag("Player");
         spawnEnemiesScript = GetComponent<SpawnEnemies>();
@@ -45,15 +48,13 @@ public class CountScore : MonoBehaviour {
         {
             beginningHighscore = PlayerPrefs.GetFloat("Highscore");
         }
-        uiPanel.SetActive(false);
-        uiPanel.gameObject.SetActive(false);
     }
 	
     void addLineRenderer(List<LineRenderer> lineRenderers)
     {
         GameObject objToSpawn = new GameObject("LineRendererHolder" + lineRenderers.Count.ToString());
         lineRenderer = objToSpawn.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        lineRenderer.material = lineRendererMaterialOuterRadius;
         lineRenderer.SetColors(Color.white, Color.white);
         lineRenderer.SetWidth(0.05F, 0.05F);
         lineRenderer.SetVertexCount(2);
@@ -65,6 +66,7 @@ public class CountScore : MonoBehaviour {
     void Update () {
 
         multiplier = 1 + spawnEnemiesScript.currentWave;
+        Debug.Log("Base muliplier is " + multiplier.ToString() + ".");
         Vector3 playerCenter = player.GetComponent<Renderer>().bounds.center;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -77,6 +79,7 @@ public class CountScore : MonoBehaviour {
             }
         }
 
+        Debug.Log("Handling " + enemies.Length + " enemies.");
         string positionInfo = "";
         for(int i = 0; i < enemies.Length; i++)
         {
@@ -97,10 +100,12 @@ public class CountScore : MonoBehaviour {
                 {
                     multiplier++;
                     lineRenderers[i].SetColors(Color.red, Color.red);
+                    lineRenderers[i].material = lineRendererMaterialInnerRadius;
                 }
                 else
                 {
                     lineRenderers[i].SetColors(Color.white, Color.white);
+                    lineRenderers[i].material = lineRendererMaterialOuterRadius;
                 }
                 //Gizmos.DrawLine(player.transform.position, enemy.transform.position);
             }
@@ -114,6 +119,7 @@ public class CountScore : MonoBehaviour {
         //Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
         //printEnemyPos();
 
+        Debug.Log("Handling score, currently it is " + score.ToString("n2") + ".");
         scoreText.text = "Score: " + score.ToString("n2");
         if(score > beginningHighscore)
         {
@@ -128,6 +134,11 @@ public class CountScore : MonoBehaviour {
         {
             score += multiplier * (Time.deltaTime * scorePerSecond);
         }
+        else
+        {
+            Debug.Log("Not adding score");
+        }
+
         multiplierText.text = multiplier.ToString() + "x";
         multiplierText.fontSize = 20 + (2 * multiplier);
         multiplierText.fontSize = Mathf.Min(multiplierText.fontSize, 40);
@@ -156,7 +167,7 @@ public class CountScore : MonoBehaviour {
         addScore = false;
     }
 
-    void ShowHighscore()
+    void UpdateHighscoreText()
     {
         textDeadTitle.text = "YOU ARE DEAD";
         textDeadLine1.text = "Score: " + score.ToString("n2");
@@ -167,9 +178,7 @@ public class CountScore : MonoBehaviour {
             PlayerPrefs.Save();
             textDeadLine1.text = "New Highscore!";
             textDeadLine2.text = score.ToString("n2");
-        }
-        uiPanel.SetActive(true);
-        uiPanel.gameObject.SetActive(true);
+        }        
     }
 
     void printEnemyPos()
