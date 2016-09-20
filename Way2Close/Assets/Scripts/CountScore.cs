@@ -67,7 +67,6 @@ public class CountScore : MonoBehaviour {
 
         multiplier = 1 + spawnEnemiesScript.currentWave;
         Debug.Log("Base muliplier is " + multiplier.ToString() + ".");
-        Vector3 playerCenter = player.GetComponent<Renderer>().bounds.center;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         if(lineRenderers.Count < enemies.Length)
@@ -79,22 +78,19 @@ public class CountScore : MonoBehaviour {
             }
         }
 
-        Debug.Log("Handling " + enemies.Length + " enemies.");
+        
         string positionInfo = "";
         for(int i = 0; i < enemies.Length; i++)
         {
             GameObject enemy = enemies[i];
             positionInfo += " " + enemy.transform.position;
-            //lineRenderer.enabled = true;            
-            //lineRenderer.enabled = true;
-
+        
             Vector3 distance = player.transform.position - enemy.transform.position;
             if(distance.sqrMagnitude < scoreOuterRadius)
             {
-                multiplier++;
-                lineRenderers[i].enabled = true;
-                lineRenderers[i].SetPosition(0, player.transform.position);
-                lineRenderers[i].SetPosition(1, enemy.transform.position);
+                multiplier++;                
+                lineRenderers[i].SetPosition(0, player.GetComponent<Renderer>().bounds.center);
+                lineRenderers[i].SetPosition(1, enemy.GetComponent<Renderer>().bounds.center);
 
                 if (distance.sqrMagnitude < scoreInnerRadius)
                 {
@@ -107,6 +103,7 @@ public class CountScore : MonoBehaviour {
                     lineRenderers[i].SetColors(Color.white, Color.white);
                     lineRenderers[i].material = lineRendererMaterialOuterRadius;
                 }
+                lineRenderers[i].enabled = true;
                 //Gizmos.DrawLine(player.transform.position, enemy.transform.position);
             }
             else
@@ -119,7 +116,7 @@ public class CountScore : MonoBehaviour {
         //Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
         //printEnemyPos();
 
-        Debug.Log("Handling score, currently it is " + score.ToString("n2") + ".");
+        
         scoreText.text = "Score: " + score.ToString("n2");
         if(score > beginningHighscore)
         {
@@ -134,10 +131,7 @@ public class CountScore : MonoBehaviour {
         {
             score += multiplier * (Time.deltaTime * scorePerSecond);
         }
-        else
-        {
-            Debug.Log("Not adding score");
-        }
+        
 
         multiplierText.text = multiplier.ToString() + "x";
         multiplierText.fontSize = 20 + (2 * multiplier);
@@ -188,12 +182,6 @@ public class CountScore : MonoBehaviour {
         foreach(GameObject enemy in enemies)       
         {
             positionInfo += " " + enemy.transform.position;
-            //lineRenderer.SetPosition(0, player.transform.position);
-            //lineRenderer.SetPosition(1, enemy.transform.position);
-            //lineRenderer.SetPosition(0, new Vector3(0, 0));
-            //lineRenderer.SetPosition(1, new Vector3(500, 500));
-            //lineRenderer.enabled = true;
-
             Vector3 distance = player.transform.position - enemy.transform.position;
             Debug.Log("Found enemy in distance " + distance.ToString() + ". Magnitude is " + distance.magnitude.ToString() + ". SqrMagnitude is " + distance.sqrMagnitude.ToString() + ".");
         }
