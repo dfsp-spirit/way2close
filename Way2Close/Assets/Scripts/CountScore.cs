@@ -66,7 +66,7 @@ public class CountScore : MonoBehaviour {
     void Update () {
 
         multiplier = 1 + spawnEnemiesScript.currentWave;
-        Debug.Log("Base muliplier is " + multiplier.ToString() + ".");
+        //Debug.Log("Base muliplier is " + multiplier.ToString() + ".");
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         if(lineRenderers.Count < enemies.Length)

@@ -33,7 +33,7 @@ public class ViewportHandler : MonoBehaviour
     #region FIELDS
     public Color wireColor = Color.white;
     public float UnitsSize = 1; // size of your scene in unity units
-    public Constraint constraint = Constraint.Portrait;
+    public Constraint constraint = Constraint.Landscape;
     public static ViewportHandler Instance;
     public new Camera camera;
 

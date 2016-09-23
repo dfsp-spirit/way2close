@@ -8,10 +8,10 @@ public class PlayerDie : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Collision involving player.");
+        //Debug.Log("Collision involving player.");
         if (other.gameObject.tag == "Enemy")
         {
-            Debug.Log("Player collided with enemy.");
+            //Debug.Log("Player collided with enemy.");
             KillMe();
             StopEnemies();
             GameObject gc = GameObject.FindGameObjectWithTag("GameController");
