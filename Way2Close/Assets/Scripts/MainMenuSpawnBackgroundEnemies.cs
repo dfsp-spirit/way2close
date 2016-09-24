@@ -13,7 +13,7 @@ public class MainMenuSpawnBackgroundEnemies : MonoBehaviour {
         objectRenderWidth = enemy.GetComponent<Renderer>().bounds.size.x;
         objectRenderHeight = enemy.GetComponent<Renderer>().bounds.size.y;
 
-        Debug.Log("Enemy render width is " + objectRenderWidth.ToString() + ", height is " + objectRenderHeight + ".");
+        //Debug.Log("Enemy render width is " + objectRenderWidth.ToString() + ", height is " + objectRenderHeight + ".");
 
         for (int i = 0; i < 10; i++)
         {
