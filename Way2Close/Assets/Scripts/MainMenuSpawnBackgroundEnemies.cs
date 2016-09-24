@@ -8,12 +8,14 @@ public class MainMenuSpawnBackgroundEnemies : MonoBehaviour {
     float objectRenderHeight;
     // Use this for initialization
     void Start () {
-        enemy.transform.localScale = new Vector3(0.25F, 0.25F, 1.0F);
+        
 
         objectRenderWidth = enemy.GetComponent<Renderer>().bounds.size.x;
         objectRenderHeight = enemy.GetComponent<Renderer>().bounds.size.y;
 
-        for (int i = 0; i < 3; i++)
+        Debug.Log("Enemy render width is " + objectRenderWidth.ToString() + ", height is " + objectRenderHeight + ".");
+
+        for (int i = 0; i < 10; i++)
         {
             Spawn();
         }
@@ -26,9 +28,12 @@ public class MainMenuSpawnBackgroundEnemies : MonoBehaviour {
         
         //enemy.transform.localScale = new Vector3(0.5F, 0.5F, 1.0F);
         Vector3 spawnPos = new Vector3();
-        spawnPos.x = Screen.width + objectRenderWidth + Random.Range(0, objectRenderWidth * 5);
+        float randVal = Random.Range(0.0F, (Screen.width * 0.9F));
+        
+        spawnPos.x = Screen.width + objectRenderWidth + randVal;
+        //Debug.Log("Spawning background enemy in main menu, adding random value " + randVal.ToString() + " to x coord. Resulting value is " + spawnPos.x.ToString() + ".");
         spawnPos.y = Random.Range(0 + objectRenderHeight, Screen.height - objectRenderHeight);
-        spawnPos.z = 0;
+        spawnPos.z = 0.0F;
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
         worldPos.z = 0;
