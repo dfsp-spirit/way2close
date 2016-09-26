@@ -7,12 +7,15 @@ public class TutorialController : MonoBehaviour {
     public GameObject tutorialPanel;
     public Text tutorialHeading;
     public Text tutorialLine;
+    Text[] texts;
 
     float showPanelDuration = 5.0F;
     float showNextPanelInTime = 8.0F;
+    float uiFadeDuration = 1.0F;
 
     // Use this for initialization
     void Start () {
+        texts = tutorialPanel.GetComponentsInChildren<Text>();
         tutorialPanel.SetActive(false);
         Invoke("showWelcomeText", 1.0F);
     }
@@ -61,12 +64,29 @@ public class TutorialController : MonoBehaviour {
     void ShowPanel()
     {
         tutorialPanel.SetActive(true);
+
+        foreach (Text t in texts)
+        {
+            t.GetComponent<CanvasRenderer>().SetAlpha(0.1f);
+            t.CrossFadeAlpha(1f, uiFadeDuration, false);
+        }
     }
 
     void HidePanel()
+    {        
+        foreach (Text t in texts)
+        {
+            t.GetComponent<CanvasRenderer>().SetAlpha(1.0f);
+            t.CrossFadeAlpha(0.1f, uiFadeDuration, false);
+        }
+
+
+        Invoke("DeactivatePanel", uiFadeDuration);
+    }
+	
+    void DeactivatePanel()
     {
         tutorialPanel.SetActive(false);
     }
-	
 	
 }
