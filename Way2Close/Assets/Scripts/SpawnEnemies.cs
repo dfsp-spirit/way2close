@@ -23,13 +23,17 @@ public class SpawnEnemies : MonoBehaviour {
         timeLeft = maxLevelTime;
         levelText.text = "Wave " + currentWave.ToString();
 
-        for(int i = 0; i < numInitialEnemies; i++)
+        Invoke("StartEnemySpawning", 3.0F); // wait 3 secs, because the player needs some time to adapt to the level and also cannot move for 3 secs
+    }
+
+    void StartEnemySpawning()
+    {
+        for (int i = 0; i < numInitialEnemies; i++)
         {
             Spawn();
         }
 
         InvokeRepeating("NextWave", 10f, 10f);
-
     }
 
     void NextWave()

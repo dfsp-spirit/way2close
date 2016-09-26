@@ -63,4 +63,9 @@ public class InputController : MonoBehaviour {
     {
         doInputChecking = false;
     }
+
+    void AllowMoving()
+    {
+        doInputChecking = true;
+    }
 }

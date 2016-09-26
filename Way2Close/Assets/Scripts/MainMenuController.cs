@@ -19,6 +19,11 @@ public class MainMenuController : MonoBehaviour {
         SceneManager.LoadScene("Level_0");
     }
 
+    public void ClickTutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
+    }
+
     public void ClickTrainingLevel0()
     {
         SceneManager.LoadScene("Level_0");
