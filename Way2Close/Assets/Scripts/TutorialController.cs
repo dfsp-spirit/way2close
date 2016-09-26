@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TutorialController : MonoBehaviour {
 
@@ -47,18 +48,73 @@ public class TutorialController : MonoBehaviour {
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        Invoke("showFloorCeilingInfoText", showNextPanelInTime);
+        Invoke("showEnemiesIncomingInfoText", showNextPanelInTime);
     }
 
-    void showFloorCeilingInfoText()
+    void showEnemiesIncomingInfoText()
     {
-        tutorialHeading.text = "WARNING: Obstacles incoming.";
-        tutorialLine.text = "Avoid all incoming obstacles.";
+        tutorialHeading.text = "WARNING: Enemies incoming.";
+        tutorialLine.text = "Avoid all incoming enemies.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
+        SpawnNumEnemies(3);
+
+        Invoke("showWellDoneInfoText", (showNextPanelInTime * 2.0F));
+    }
+
+    void showWellDoneInfoText()
+    {
+        tutorialHeading.text = "Well done.";
+        tutorialLine.text = "Now let's learn howto score more points.";
+        ShowPanel();
+        Invoke("HidePanel", showPanelDuration);
+
+        Invoke("showScoreInfoText", showNextPanelInTime);
+    }
+
+    void showScoreInfoText()
+    {
+        tutorialHeading.text = "Surviving is not enough.";
+        tutorialLine.text = "You earn points for each second you survive. But increasing your multiplier is the key to glory.";
+        ShowPanel();
+        Invoke("HidePanel", showPanelDuration);
+
+        Invoke("showScoreMultiplierInfoText", showNextPanelInTime);
+    }
+
+    void showScoreMultiplierInfoText()
+    {
+        tutorialHeading.text = "Fly close to enemies to increase your multiplier.";
+        tutorialLine.text = "You earn points for each second you survive. But increasing your multiplier is the key to glory.";
+        ShowPanel();
+        Invoke("HidePanel", showPanelDuration);
+        SpawnNumEnemies(3);
+
+        Invoke("showTutorialEndText", (showNextPanelInTime * 2.0F));
+    }
+
+    void showTutorialEndText()
+    {
+        tutorialHeading.text = "It's time to get some real-word experience.";
+        tutorialLine.text = "This concludes the tutorial.";
+        ShowPanel();
+        Invoke("HidePanel", showPanelDuration);
+        Invoke("LoadMainMenu", (showPanelDuration * 2.0F));
     }
 
 
+    void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    void SpawnNumEnemies(int enemyCount)
+    {
+        for(int i = 0; i < enemyCount; i++)
+        {
+            SendMessage("Spawn");
+        }        
+    }
 
 
     void ShowPanel()
