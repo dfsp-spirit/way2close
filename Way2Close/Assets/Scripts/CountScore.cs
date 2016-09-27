@@ -11,7 +11,7 @@ public class CountScore : MonoBehaviour {
     public Material lineRendererMaterialOuterRadius;
     public Material lineRendererMaterialInnerRadius;
 
-    public GameObject uiPanel;
+    public GameObject uiPanelOnDeath;
     public Text textDeadTitle;
     public Text textDeadLine1;
     public Text textDeadLine2;
@@ -26,28 +26,47 @@ public class CountScore : MonoBehaviour {
     LineRenderer lineRenderer;
     List<LineRenderer> lineRenderers;
     GameObject player;
-    int numInitialEnemies;
+    GameObject gameController;
+    //int numInitialEnemies;
     SpawnEnemies spawnEnemiesScript;
 
     void Start () {
         score = 0.0F;
         multiplier = 1;
         addScore = true;
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.Find("Player");
+        gameController = GameObject.Find("GameController");
         spawnEnemiesScript = GetComponent<SpawnEnemies>();
-        numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
+        //numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
         lineRenderers = new List<LineRenderer>();
 
-        for(int i = 0; i < numInitialEnemies; i++)
-        {
-            addLineRenderer(lineRenderers);
-        }
+        //for(int i = 0; i < numInitialEnemies; i++)
+        //{
+        //    addLineRenderer(lineRenderers);
+        //}
 
         beginningHighscore = 0.0F;
         if(PlayerPrefs.HasKey("Highscore"))
         {
             beginningHighscore = PlayerPrefs.GetFloat("Highscore");
         }
+
+        if (SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            disableScoreUI();
+            disableOnDeathUI();
+        }
+    }
+
+    void disableOnDeathUI()
+    {
+        uiPanelOnDeath.gameObject.SetActive(false);
+    }
+
+    void disableScoreUI()
+    {
+        scoreText.gameObject.SetActive(false);
+        multiplierText.gameObject.SetActive(false);
     }
 	
     void addLineRenderer(List<LineRenderer> lineRenderers)
@@ -63,27 +82,27 @@ public class CountScore : MonoBehaviour {
     }
 
 
+    int getCurrentWave()
+    {
+        
+          return spawnEnemiesScript.currentWave;
+
+    }
+
     void Update () {
 
-        multiplier = 1 + spawnEnemiesScript.currentWave;
+        multiplier = 1 + getCurrentWave();
         //Debug.Log("Base muliplier is " + multiplier.ToString() + ".");
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if(lineRenderers.Count < enemies.Length)
-        {
-            int diff = enemies.Length - lineRenderers.Count;
-            for(int i = 0; i < diff; i++)
-            {
-                addLineRenderer(lineRenderers);
-            }
-        }
+        UpdateLineRenderers(enemies);
+        
 
         
-        string positionInfo = "";
         for(int i = 0; i < enemies.Length; i++)
         {
             GameObject enemy = enemies[i];
-            positionInfo += " " + enemy.transform.position;
+            
         
             Vector3 distance = player.transform.position - enemy.transform.position;
             if(distance.sqrMagnitude < scoreOuterRadius)
@@ -113,12 +132,27 @@ public class CountScore : MonoBehaviour {
             
         }
 
-        //Debug.Log("Player center at " + playerCenter.ToString() + ", " + (multiplier - 1).ToString() + " colliders in range.");
-        //printEnemyPos();
-
+        updateUIScoreMulti();
         
+    }
+
+
+    private void UpdateLineRenderers(GameObject[] enemies)
+    {
+        if (lineRenderers.Count < enemies.Length)
+        {
+            int diff = enemies.Length - lineRenderers.Count;
+            for (int i = 0; i < diff; i++)
+            {
+                addLineRenderer(lineRenderers);
+            }
+        }
+    }
+
+    private void updateUIScoreMulti()
+    {
         scoreText.text = "Score: " + score.ToString("n2");
-        if(score > beginningHighscore)
+        if (score > beginningHighscore)
         {
             scoreText.color = Color.red;
         }
@@ -131,7 +165,7 @@ public class CountScore : MonoBehaviour {
         {
             score += multiplier * (Time.deltaTime * scorePerSecond);
         }
-        
+
 
         multiplierText.text = multiplier.ToString() + "x";
         multiplierText.fontSize = 20 + (2 * multiplier);
@@ -153,7 +187,6 @@ public class CountScore : MonoBehaviour {
         {
             multiplierText.color = Color.red;
         }
-        
     }
 
     void StopAddingScore()
@@ -175,7 +208,7 @@ public class CountScore : MonoBehaviour {
         }        
     }
 
-    void printEnemyPos()
+    private void printEnemyPos()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         string positionInfo = "";

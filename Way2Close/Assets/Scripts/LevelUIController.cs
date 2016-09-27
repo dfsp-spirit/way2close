@@ -16,12 +16,23 @@ public class LevelUIController : MonoBehaviour {
         SetShowInGameHUD(true);
     }
 		
-    void showInGameHUD()
+    void ShowInGameHUD()
     {
         SetShowInGameHUD(true);
     }
 
-    void SetShowInGameHUD(bool state)
+    void HideInGameHUD()
+    {
+        SetShowInGameHUD(false);
+    }
+
+    void HideTimeAndWave()
+    {
+        uiTextTime.gameObject.SetActive(false);
+        uiTextWave.gameObject.SetActive(false);
+    }
+
+    private void SetShowInGameHUD(bool state)
     {
         uiTextMultiplier.gameObject.SetActive(state);
         uiTextTime.gameObject.SetActive(state);
@@ -29,7 +40,7 @@ public class LevelUIController : MonoBehaviour {
         uiTextWave.gameObject.SetActive(state);
     }
 
-    void SetShowHighScorePanel(bool state)
+    private void SetShowHighScorePanel(bool state)
     {
         //uiPanelDeathMenu.SetActive(state);
         uiPanelDeathMenu.gameObject.SetActive(state);

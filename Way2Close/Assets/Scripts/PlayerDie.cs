@@ -55,11 +55,11 @@ public class PlayerDie : MonoBehaviour {
                 //Debug.Log("Player collided with enemy.");
                 KillMe();
                 StopEnemies();
-                gameController.SendMessage("StopAddingScore");
-                gameController.SendMessage("StopSpawning");
-                gameController.SendMessage("StopUpdatingLevelTime");
-                gameController.SendMessage("UpdateHighscoreText");
-                gameController.SendMessage("ShowHighScorePanel");
+                gameController.GetComponent<CountScore>().SendMessage("StopAddingScore");
+                gameController.GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
+                gameController.GetComponent<SpawnEnemies>().SendMessage("StopUpdatingLevelTime");
+                gameController.GetComponent<CountScore>().SendMessage("UpdateHighscoreText");
+                gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");
             }
         }            
     }

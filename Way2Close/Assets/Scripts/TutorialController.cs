@@ -19,6 +19,7 @@ public class TutorialController : MonoBehaviour {
         texts = tutorialPanel.GetComponentsInChildren<Text>();
         tutorialPanel.SetActive(false);
         Invoke("showWelcomeText", 1.0F);
+        GetComponent<LevelUIController>().SendMessage("HideInGameHUD");
     }
 
     void showWelcomeText()
@@ -27,6 +28,8 @@ public class TutorialController : MonoBehaviour {
         tutorialLine.text = "";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
+
+        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
 
         Invoke("showControlInfoText", showNextPanelInTime);
     }
@@ -79,27 +82,31 @@ public class TutorialController : MonoBehaviour {
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
+        GetComponent<LevelUIController>().SendMessage("ShowInGameHUD");
+        GetComponent<LevelUIController>().SendMessage("HideTimeAndWave");
+
         Invoke("showScoreMultiplierInfoText", showNextPanelInTime);
     }
 
     void showScoreMultiplierInfoText()
     {
-        tutorialHeading.text = "Fly close to enemies to increase your multiplier.";
-        tutorialLine.text = "You earn points for each second you survive. But increasing your multiplier is the key to glory.";
+        tutorialHeading.text = "Approach enemies to increase the multiplier.";
+        tutorialLine.text = "A line will appear, indicating enemies that currently increase your multiplier.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
-        SpawnNumEnemies(3);
+        //SpawnNumEnemies(3);
+        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
 
         Invoke("showTutorialEndText", (showNextPanelInTime * 2.0F));
     }
 
     void showTutorialEndText()
     {
-        tutorialHeading.text = "It's time to get some real-word experience.";
+        tutorialHeading.text = "Well done. Time to play the game!";
         tutorialLine.text = "This concludes the tutorial.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
-        Invoke("LoadMainMenu", (showPanelDuration * 2.0F));
+        Invoke("LoadMainMenu", (showPanelDuration * 1.0F));
     }
 
 
@@ -112,7 +119,7 @@ public class TutorialController : MonoBehaviour {
     {
         for(int i = 0; i < enemyCount; i++)
         {
-            SendMessage("Spawn");
+            GetComponent<SpawnEnemies>().SendMessage("Spawn");
         }        
     }
 

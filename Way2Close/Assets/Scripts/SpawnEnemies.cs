@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SpawnEnemies : MonoBehaviour {
 
@@ -16,14 +18,17 @@ public class SpawnEnemies : MonoBehaviour {
     float timeLeft;
     bool updateLevelTime;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         currentWave = 0;
         updateLevelTime = true;
         timeLeft = maxLevelTime;
         levelText.text = "Wave " + currentWave.ToString();
 
-        Invoke("StartEnemySpawning", 3.0F); // wait 3 secs, because the player needs some time to adapt to the level and also cannot move for 3 secs
+        if (SceneManager.GetActiveScene().name == "Level_0") {
+            Invoke("StartEnemySpawning", 3.0F); // wait 3 secs, because the player needs some time to adapt to the level and also cannot move for 3 secs
+        }
     }
 
     void StartEnemySpawning()
@@ -60,6 +65,44 @@ public class SpawnEnemies : MonoBehaviour {
 
         int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
         Instantiate(enemyTypePrefabs[enemyTypeIndex], worldPos, Quaternion.identity);
+    }
+
+    void SpawnAtWorldPosition(Vector3 worldPos)
+    {
+        int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
+        Instantiate(enemyTypePrefabs[enemyTypeIndex], worldPos, Quaternion.identity);
+    }
+
+    public void SpawnUpdwardsLine(GameObject prefab, Vector3 firstPos, int numObjects, Vector3 shiftVector)
+    {
+        List<Vector3> positions = new List<Vector3>();
+
+        if(numObjects > 0)
+        {
+            for(int i = 0; i < numObjects; i++)
+            {
+                positions.Add(new Vector3(firstPos.x + (i * shiftVector.x), firstPos.y + (i * shiftVector.y), firstPos.z + (i * shiftVector.z)));
+            }
+        }
+
+        spawnFromWorldPositionsList(positions, prefab);
+    }
+
+    public void SpawnUpdwardsLineDefault()
+    {
+        GameObject prefab = enemyTypePrefabs[0];
+        Vector3 firstPos = new Vector3(5.0F, -5.0F, 0.0F);
+        int numObjects = 8;
+        Vector3 shiftVector = new Vector3(1.0F, 1.0F, 0.0F);
+        SpawnUpdwardsLine(prefab, firstPos, numObjects, shiftVector);
+    }
+
+    private void spawnFromWorldPositionsList(List<Vector3> positions, GameObject prefab)
+    {
+        foreach(Vector3 worldPos in positions)
+        {
+            Instantiate(prefab, worldPos, Quaternion.identity);
+        }
     }
 
     void StopSpawning()
