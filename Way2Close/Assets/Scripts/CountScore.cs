@@ -96,10 +96,16 @@ public class CountScore : MonoBehaviour {
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         UpdateLineRenderers(enemies);
-        
 
-        
-        for(int i = 0; i < enemies.Length; i++)
+
+        // switch all line renderers off by default. prevents some from showing which are not checked below anymore because the associated enemy was destroyed.
+        for(int i = 0; i < lineRenderers.Count; i++)
+        {
+            lineRenderers[i].enabled = false;
+        }
+
+
+        for (int i = 0; i < enemies.Length; i++)
         {
             GameObject enemy = enemies[i];
             
