@@ -6,9 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
-    List<string> levelNames = new List<string>() { "Randomness" };
-    List<string> levelSceneNames = new List<string>() { "Level_0" };
-    string sceneNameMainMenu = "MainMenu";
+    public static string sceneName_Level_0 = "Level_0";
+    public static string sceneName_Level_1 = "Level_1";
+    public static string sceneName_MainMenu = "MainMenu";
+    public static string sceneName_Tutorial = "Tutorial";
+
+    public static List<string> levelFancyNames = new List<string>() { "Randomness", "The Stairs" };
+    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1 };
+        
 
     public bool nextLevelExists()
     {
@@ -44,7 +49,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         // fall back to main menu if something went wrong
-        SceneManager.LoadScene(sceneNameMainMenu);
+        SceneManager.LoadScene(sceneName_MainMenu);
     }
 
     public string GetLevelNameBySceneName(string sceneName)
@@ -52,13 +57,13 @@ public class LevelManager : MonoBehaviour {
         int sceneIndex = levelSceneNames.IndexOf(sceneName);
         if(sceneIndex >= 0)
         {
-            return levelNames[sceneIndex];
+            return levelFancyNames[sceneIndex];
         }
         return null;
     }
 
     public string getMainMenuSceneName()
     {
-        return this.sceneNameMainMenu;
+        return sceneName_MainMenu;
     }
 }

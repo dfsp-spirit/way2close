@@ -11,27 +11,31 @@ public class MainMenuController : MonoBehaviour {
 
     void Start()
     {
+        // reset score of the current game whenever the player enters the main menu
+        PlayerPrefs.SetFloat(CountScore.totalScoreThisGameKey, 0.0F);
+        PlayerPrefs.Save();
+
         ShowMenuPanelMain();
     }
 
     public void ClickPlay()
     {
-        SceneManager.LoadScene("Level_0");
+        SceneManager.LoadScene(LevelManager.sceneName_Level_0);
     }
 
     public void ClickTutorial()
     {
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene(LevelManager.sceneName_Tutorial);
     }
 
     public void ClickTrainingLevel0()
     {
-        SceneManager.LoadScene("Level_0");
+        SceneManager.LoadScene(LevelManager.sceneName_Level_0);
     }
 
     public void ClickTrainingLevel1()
     {
-        SceneManager.LoadScene("Level_1");
+        SceneManager.LoadScene(LevelManager.sceneName_Level_1);
     }
 
     public void ClickExit () {
@@ -62,10 +66,9 @@ public class MainMenuController : MonoBehaviour {
         panelAbout.SetActive(true);
     }
 
-    public string[] getLevelNames()
-    {
-        string[] levelNames = new string[] { "Level_0", "Level_1" };
-        return levelNames;
+    public string[] getLevelSceneNames()
+    {        
+        return LevelManager.levelSceneNames.ToArray();
     }
 
     public void ShowMenuPanelLevelSelect()
@@ -110,7 +113,7 @@ public class MainMenuController : MonoBehaviour {
     
     bool[] getLevelUnlockedStatus()
     {
-        string[] levelNames = getLevelNames();
+        string[] levelNames = getLevelSceneNames();
         int numLevels = levelNames.Length;
         bool[] levelUnlocked = new bool[numLevels];
         for(int i = 0; i < numLevels; i++)
@@ -138,7 +141,7 @@ public class MainMenuController : MonoBehaviour {
 
     public void unlockLevel(int levelIndex)
     {
-        string[] levelNames = getLevelNames();
+        string[] levelNames = getLevelSceneNames();
         string keyName = "unlockedLevel_" + levelNames[levelIndex];
         PlayerPrefs.SetInt(keyName, 1);
     }

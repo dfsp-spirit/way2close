@@ -19,8 +19,10 @@ public class CountScore : MonoBehaviour {
     float scoreOuterRadius = 5.0F;
     float scoreInnerRadius = 2.5F;
     float scorePerSecond = 1.0F;
-    float score;
-    float beginningHighscore;
+    float levelScore;
+    float gameScore;
+    float beginningHighscoreThisLevel;
+    float beginningHighScoreTotalEver;
     int multiplier;
     bool addScore;
     LineRenderer lineRenderer;
@@ -28,31 +30,67 @@ public class CountScore : MonoBehaviour {
     GameObject player;
     //int numInitialEnemies;
     SpawnEnemies spawnEnemiesScript;
+    string highScoreThisLevelKey;
+    public static string highScoreTotalEverKey = "Highscore";
+    public static string totalScoreThisGameKey = "ScoreThisGame";
 
     void Start () {
-        score = 0.0F;
+        levelScore = 0.0F;
         multiplier = 1;
         addScore = true;
         player = GameObject.Find("Player");
         spawnEnemiesScript = GetComponent<SpawnEnemies>();
-        //numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
+        
         lineRenderers = new List<LineRenderer>();
+       
 
-        //for(int i = 0; i < numInitialEnemies; i++)
-        //{
-        //    addLineRenderer(lineRenderers);
-        //}
-
-        beginningHighscore = 0.0F;
-        if(PlayerPrefs.HasKey("Highscore"))
-        {
-            beginningHighscore = PlayerPrefs.GetFloat("Highscore");
-        }
+        initHighScores();
 
         if (SceneManager.GetActiveScene().name == "Tutorial")
         {
             disableScoreUI();
             disableOnDeathUI();
+        }
+    }
+
+    
+    public void GameEndedResetGameScore()
+    {
+        PlayerPrefs.SetFloat(totalScoreThisGameKey, 0.0F);
+        PlayerPrefs.Save();
+    }
+
+    void initHighScores()
+    {
+        if (PlayerPrefs.HasKey(totalScoreThisGameKey))
+        {
+            this.gameScore = PlayerPrefs.GetFloat(totalScoreThisGameKey);
+        }
+        else
+        {
+            this.gameScore = 0.0F;
+        }
+
+        this.highScoreThisLevelKey = "Highscore_" + SceneManager.GetActiveScene().name;
+
+        
+        if (PlayerPrefs.HasKey(highScoreThisLevelKey))
+        {
+            beginningHighscoreThisLevel = PlayerPrefs.GetFloat(highScoreThisLevelKey);
+        }
+        else
+        {
+            beginningHighscoreThisLevel = 0.0F;
+        }
+
+        
+        if (PlayerPrefs.HasKey(highScoreTotalEverKey))
+        {
+            beginningHighScoreTotalEver = PlayerPrefs.GetFloat(highScoreTotalEverKey);
+        }
+        else
+        {
+            beginningHighScoreTotalEver = 0.0F;
         }
     }
 
@@ -83,6 +121,11 @@ public class CountScore : MonoBehaviour {
     int getCurrentWave()
     {        
           return spawnEnemiesScript.currentWave;
+    }
+
+    public float GetLevelScore()
+    {
+        return levelScore;
     }
 
     void Update () {
@@ -153,8 +196,8 @@ public class CountScore : MonoBehaviour {
 
     private void updateUIScoreMulti()
     {
-        scoreText.text = "Score: " + score.ToString("n2");
-        if (score > beginningHighscore)
+        scoreText.text = "Score: " + levelScore.ToString("n2");
+        if (levelScore > beginningHighscoreThisLevel)
         {
             scoreText.color = Color.red;
         }
@@ -165,7 +208,7 @@ public class CountScore : MonoBehaviour {
 
         if (addScore)
         {
-            score += multiplier * (Time.deltaTime * scorePerSecond);
+            levelScore += multiplier * (Time.deltaTime * scorePerSecond);
         }
 
 
@@ -199,15 +242,22 @@ public class CountScore : MonoBehaviour {
     void UpdateHighscoreText()
     {
         textDeadTitle.text = "YOU ARE DEAD";
-        textDeadLine1.text = "Score: " + score.ToString("n2");
-        textDeadLine2.text = "Highscore: " + beginningHighscore.ToString("n2");
-        if (score > beginningHighscore)
+        textDeadLine1.text = "Score this level: " + levelScore.ToString("n2");
+        textDeadLine2.text = "Highscore this level: " + beginningHighscoreThisLevel.ToString("n2");
+        if (levelScore > beginningHighscoreThisLevel)
         {
-            PlayerPrefs.SetFloat("Highscore", score);
+            PlayerPrefs.SetFloat(highScoreThisLevelKey, levelScore);
             PlayerPrefs.Save();
-            textDeadLine1.text = "New Highscore!";
-            textDeadLine2.text = score.ToString("n2");
+            textDeadLine1.text = "New Highscore for level!";
+            textDeadLine2.text = levelScore.ToString("n2");
         }        
+        if(gameScore > beginningHighScoreTotalEver)
+        {
+            PlayerPrefs.SetFloat(highScoreTotalEverKey, gameScore);
+            PlayerPrefs.Save();
+            textDeadLine1.text = "New total Highscore!";
+            textDeadLine2.text = gameScore.ToString("n2");
+        }
     }
 
     private void printEnemyPos()
@@ -230,12 +280,14 @@ public class CountScore : MonoBehaviour {
 
     public void ButtonRestartLevelClicked()
     {
+        GetComponent<CountScore>().SendMessage("GameEndedResetGameScore");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         
     }
 
     public void ButtonToMainMenuClicked()
     {
+        GetComponent<CountScore>().SendMessage("GameEndedResetGameScore");
         SceneManager.LoadScene("MainMenu");
     }
 }
