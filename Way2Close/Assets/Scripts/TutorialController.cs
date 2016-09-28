@@ -29,7 +29,7 @@ public class TutorialController : MonoBehaviour {
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
+        //GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
 
         Invoke("showControlInfoText", showNextPanelInTime);
     }
@@ -94,9 +94,13 @@ public class TutorialController : MonoBehaviour {
         tutorialLine.text = "A line will appear, indicating enemies that currently increase your multiplier.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
-        //SpawnNumEnemies(3);
-        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
+        
+        Invoke("spawnEnemyLines", showNextPanelInTime);
+    }
 
+    void spawnEnemyLines()
+    {
+        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
         Invoke("showTutorialEndText", (showNextPanelInTime * 2.0F));
     }
 

@@ -26,7 +26,6 @@ public class CountScore : MonoBehaviour {
     LineRenderer lineRenderer;
     List<LineRenderer> lineRenderers;
     GameObject player;
-    GameObject gameController;
     //int numInitialEnemies;
     SpawnEnemies spawnEnemiesScript;
 
@@ -35,7 +34,6 @@ public class CountScore : MonoBehaviour {
         multiplier = 1;
         addScore = true;
         player = GameObject.Find("Player");
-        gameController = GameObject.Find("GameController");
         spawnEnemiesScript = GetComponent<SpawnEnemies>();
         //numInitialEnemies = spawnEnemiesScript.numInitialEnemies;
         lineRenderers = new List<LineRenderer>();
@@ -83,10 +81,8 @@ public class CountScore : MonoBehaviour {
 
 
     int getCurrentWave()
-    {
-        
+    {        
           return spawnEnemiesScript.currentWave;
-
     }
 
     void Update () {

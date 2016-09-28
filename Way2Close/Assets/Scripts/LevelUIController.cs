@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class LevelUIController : MonoBehaviour {
 
     public GameObject uiPanelDeathMenu;
+    public GameObject uiPanelLevelDone;
     public Text uiTextMultiplier;
     public Text uiTextTime;
     public Text uiTextScore;
@@ -13,6 +14,7 @@ public class LevelUIController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         SetShowHighScorePanel(false);
+        SetShowLevelDonePanel(false);
         SetShowInGameHUD(true);
     }
 		
@@ -44,6 +46,26 @@ public class LevelUIController : MonoBehaviour {
     {
         //uiPanelDeathMenu.SetActive(state);
         uiPanelDeathMenu.gameObject.SetActive(state);
+    }
+
+    public bool isShowingLevelDoneUI()
+    {
+        return uiPanelLevelDone.gameObject.activeSelf;
+    }
+
+    private void SetShowLevelDonePanel(bool state)
+    {        
+        uiPanelLevelDone.gameObject.SetActive(state);
+    }
+
+    void ShowLevelDonePanel()
+    {
+        SetShowLevelDonePanel(true);
+    }
+
+    void HideLevelDonePanel()
+    {
+        SetShowLevelDonePanel(false);
     }
 
     void ShowHighScorePanel()

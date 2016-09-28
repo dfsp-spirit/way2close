@@ -7,23 +7,18 @@ using UnityEngine.SceneManagement;
 public class SpawnEnemies : MonoBehaviour {
 
     public Text levelText;
-    public Text timeLeftText;
+    
     public GameObject[] enemyTypePrefabs;
     public int numInitialEnemies;
     public int numMaxEnemies;
     public int currentWave;
     public int numEnemiesAddedPerWave;
-    float timeSinceLevelLoaded;
-    float maxLevelTime = 100F;
-    float timeLeft;
-    bool updateLevelTime;
+    
 
     // Use this for initialization
     void Start()
     {
-        currentWave = 0;
-        updateLevelTime = true;
-        timeLeft = maxLevelTime;
+        currentWave = 0;        
         levelText.text = "Wave " + currentWave.ToString();
 
         if (SceneManager.GetActiveScene().name == "Level_0") {
@@ -54,17 +49,25 @@ public class SpawnEnemies : MonoBehaviour {
 	
     void Spawn()
     {
-        int objectRenderHeight = 150;
-        int objectRenderWidth = 150;
+        float objectRenderHeight;
+        float objectRenderWidth;
+        int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
+        GameObject enemy = enemyTypePrefabs[enemyTypeIndex];
+        objectRenderWidth = enemy.GetComponent<Renderer>().bounds.size.x;
+        objectRenderHeight = enemy.GetComponent<Renderer>().bounds.size.y;
+
         Vector3 spawnPos = new Vector3();
-        spawnPos.x = Screen.width + objectRenderWidth + Random.Range(0, objectRenderWidth * 5);
+        float randVal = Random.Range(0.0F, (Screen.width * 0.9F));
+
+        spawnPos.x = Screen.width + objectRenderWidth + randVal;
+        //Debug.Log("Spawning background enemy in main menu, adding random value " + randVal.ToString() + " to x coord. Resulting value is " + spawnPos.x.ToString() + ".");
         spawnPos.y = Random.Range(0 + objectRenderHeight, Screen.height - objectRenderHeight);
+        spawnPos.z = 0.0F;
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
         worldPos.z = 0;
 
-        int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
-        Instantiate(enemyTypePrefabs[enemyTypeIndex], worldPos, Quaternion.identity);
+        Instantiate(enemy, worldPos, Quaternion.identity);
     }
 
     void SpawnAtWorldPosition(Vector3 worldPos)
@@ -110,34 +113,8 @@ public class SpawnEnemies : MonoBehaviour {
         CancelInvoke();
     }
 
-    void StopUpdatingLevelTime()
-    {
-        updateLevelTime = false;
-    }
+    
 
-    void Update()
-    {
-        if (updateLevelTime)
-        {
-            timeSinceLevelLoaded = Time.timeSinceLevelLoad;
-            timeLeft = maxLevelTime - timeSinceLevelLoaded;
-        }
-
-        timeLeftText.text = "Time left: " + timeLeft.ToString("n2");
-        timeLeftText.color = Color.white;
-        if (timeLeft < (maxLevelTime * 0.5F))
-        {
-            timeLeftText.color = Color.yellow;
-        }
-        if (timeLeft < (maxLevelTime * 0.25F))
-        {
-            timeLeftText.color = Color.magenta;
-        }
-        if (timeLeft < (maxLevelTime * 0.1F))
-        {
-            timeLeftText.color = Color.red;
-        }
-        
-    }
+    
     
 }

@@ -13,10 +13,10 @@ public class PlayerDie : MonoBehaviour {
     {
         gameController = GameObject.Find("GameController");
         player = GameObject.Find("Player");
-        Spawn();
+        SpawnPlayer();
     }
 
-    void Spawn()
+    void SpawnPlayer()
     {
         SetSpawnProtectionOnFor(6.0F);
         SetPlayerNoMoveFor(3.0F);
@@ -57,7 +57,7 @@ public class PlayerDie : MonoBehaviour {
                 StopEnemies();
                 gameController.GetComponent<CountScore>().SendMessage("StopAddingScore");
                 gameController.GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
-                gameController.GetComponent<SpawnEnemies>().SendMessage("StopUpdatingLevelTime");
+                gameController.GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
                 gameController.GetComponent<CountScore>().SendMessage("UpdateHighscoreText");
                 gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");
             }
