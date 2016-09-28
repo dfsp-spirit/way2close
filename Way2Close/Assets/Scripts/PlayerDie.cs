@@ -64,6 +64,13 @@ public class PlayerDie : MonoBehaviour {
         }            
     }
 
+    public void SetLevelEndedPlayerMode()
+    {
+        this.isInvincible = true;
+        SendMessage("StopMoving");
+        StopEnemies();
+    }
+
     void KillMe () {
 	    if(!isDead)
         {

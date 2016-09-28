@@ -9,7 +9,7 @@ public class LevelTimer : MonoBehaviour {
 
 
     float timeSinceLevelLoaded;
-    float maxLevelTime = 100F;
+    float maxLevelTime = 10F;
     float timeLeft;
     bool updateLevelTime;
     bool levelEnded;
@@ -64,15 +64,26 @@ public class LevelTimer : MonoBehaviour {
 
     void CheckForLevelTimeEnded()
     {
-        if(timeLeft <= 0.0F && (! levelEnded))
-        {
-            EndLevel();            
+        if(timeLeft <= 0.0F)
+        {            
+            if ( ! levelEnded)
+            {
+                EndLevel();
+            }
         }
+        
     }
 
     void EndLevel()
     {
         levelEnded = true;
-        GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");        
+        GetComponent<CountScore>().SendMessage("StopAddingScore");
+        GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
+        GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
+        timeLeft = 0.0F;    // prevent display of a slighty negative time at level end, like "-0.01 secsonds left"
+        GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");
+
+        GameObject player = GameObject.Find("Player");
+        player.SendMessage("SetLevelEndedPlayerMode");     
     }
 }

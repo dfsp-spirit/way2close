@@ -10,6 +10,9 @@ public class LevelUIController : MonoBehaviour {
     public Text uiTextTime;
     public Text uiTextScore;
     public Text uiTextWave;
+    public Text uiTextLevelDoneTitle;
+    public Button buttonLevelDonePlayNext;
+    public Button buttonLevelDoneToMainMenu;
 
     // Use this for initialization
     void Start () {
@@ -59,8 +62,20 @@ public class LevelUIController : MonoBehaviour {
     }
 
     void ShowLevelDonePanel()
-    {
+    {                        
         SetShowLevelDonePanel(true);
+        bool nextLevelExists = GetComponent<LevelManager>().nextLevelExists();
+        buttonLevelDonePlayNext.gameObject.SetActive(nextLevelExists);
+        if(nextLevelExists)
+        {
+            uiTextLevelDoneTitle.text = "Level Completed!";
+            buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Abort to Main menu";
+        }
+        else
+        {
+            uiTextLevelDoneTitle.text = "Game Completed!";
+            buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Back to Main menu";
+        }
     }
 
     void HideLevelDonePanel()

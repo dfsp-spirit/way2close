@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
-    List<string> levelNames = new List<string>() { "Randomness", "Stairs" };
-    List<string> levelSceneNames = new List<string>() { "Level_0", "Level_1" };
+    List<string> levelNames = new List<string>() { "Randomness" };
+    List<string> levelSceneNames = new List<string>() { "Level_0" };
     string sceneNameMainMenu = "MainMenu";
 
     public bool nextLevelExists()
