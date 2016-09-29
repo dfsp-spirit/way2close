@@ -38,6 +38,22 @@ public class LeaderBoard : MonoBehaviour {
         }
     }
 
+    public static void Report()
+    {
+        Debug.Log("Global highscore:\t" + LeaderBoard.GetGlobalHighscore().ToString("n2"));
+        Debug.Log("Highscore by level:");
+        string[] levelSceneNames = LevelManager.getLevelSceneNames();
+        foreach (string sceneName in levelSceneNames)
+        {
+            Debug.Log("Level '" + sceneName + "':\t" + LeaderBoard.GetHighscoreForLevelBySceneName(sceneName).ToString("n2"));
+        }
+        Debug.Log("Level state (unlocked/locked) by level:");
+        foreach (string sceneName in levelSceneNames)
+        {
+            Debug.Log("Level '" + sceneName + "':\t" + (LevelManager.isLevelUnlockedBySceneName(sceneName) ? "yes" : "no"));
+        }
+    }
+
     // gameMode: use on of the constants in LeaderBoard.GAMEMODE_*
     public static void SetGameModeThisGame(string gameMode)
     {
@@ -54,6 +70,16 @@ public class LeaderBoard : MonoBehaviour {
     public static void ResetScoreThisGame()
     {
         LeaderBoard.SetScoreThisGame(0.0F);
+    }
+
+    public static bool IsGlobalHighscore(float myScore)
+    {
+        return (myScore > LeaderBoard.GetGlobalHighscore());
+    }
+
+    public static bool IsLevelHighscoreBySceneName(string sceneName, float myScore)
+    {
+        return (myScore > LeaderBoard.GetHighscoreForLevelBySceneName(sceneName));
     }
 
 

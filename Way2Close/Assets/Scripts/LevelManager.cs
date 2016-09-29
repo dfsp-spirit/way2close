@@ -8,21 +8,21 @@ public class LevelManager : MonoBehaviour {
 
     public static string sceneName_Level_0 = "Level_0";
     public static string sceneName_Level_1 = "Level_1";
+
     public static string sceneName_MainMenu = "MainMenu";
     public static string sceneName_Tutorial = "Tutorial";
 
-    public static List<string> levelFancyNames = new List<string>() { "Randomness", "The Stairs" };
-    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1 };
+    public static List<string> levelFancyNames = new List<string>() { "Randomness" };
+    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0 };
         
 
     public bool nextLevelExists()
     {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        int currentSceneIndex = levelSceneNames.IndexOf(currentSceneName);
 
-        if (currentSceneIndex >= 0)
+        int currentLevelIndex = GetCurrentLevelIndex();
+        if (currentLevelIndex >= 0)
         {
-            int nextSceneIndex = currentSceneIndex + 1;
+            int nextSceneIndex = currentLevelIndex + 1;
             if (nextSceneIndex >= 0 && nextSceneIndex < levelSceneNames.Count)
             {
                 return true;
@@ -32,17 +32,40 @@ public class LevelManager : MonoBehaviour {
         return false;
     }
 
-    public void ButtonNextLevelClicked()
+    private int GetCurrentLevelIndex()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
-        int currentSceneIndex = levelSceneNames.IndexOf(currentSceneName);
+        return levelSceneNames.IndexOf(currentSceneName);
+    }
 
-        if(currentSceneIndex >= 0)
+    // called at level end, when player completed level successfully
+    public void UnlockNextLevelIfAppropriate()
+    {
+        if(nextLevelExists())
         {
-            int nextSceneIndex = currentSceneIndex + 1;
-            if(nextSceneIndex >= 0 && nextSceneIndex < levelSceneNames.Count)
+            if (LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_GAME)
             {
-                string nextLevelSceneName = levelSceneNames[nextSceneIndex];
+                int currentLevelIndex = GetCurrentLevelIndex();
+
+                if (currentLevelIndex >= 0)
+                {
+                    int nextLevelIndex = currentLevelIndex + 1;
+                    UnlockLevelByLevelIndex(nextLevelIndex);
+                }
+            }
+        }
+    }
+
+    public void ButtonNextLevelClicked()
+    {        
+        int currentLevelIndex = GetCurrentLevelIndex();
+
+        if(currentLevelIndex >= 0)
+        {
+            int nextLevelIndex = currentLevelIndex + 1;
+            if(nextLevelIndex >= 0 && nextLevelIndex < levelSceneNames.Count)
+            {
+                string nextLevelSceneName = levelSceneNames[nextLevelIndex];
                 SceneManager.LoadScene(nextLevelSceneName);
             }
             
@@ -52,18 +75,78 @@ public class LevelManager : MonoBehaviour {
         SceneManager.LoadScene(sceneName_MainMenu);
     }
 
-    public string GetLevelNameBySceneName(string sceneName)
+    public static string GetLevelNameBySceneName(string sceneName)
     {
-        int sceneIndex = levelSceneNames.IndexOf(sceneName);
-        if(sceneIndex >= 0)
+        int levelIndex = levelSceneNames.IndexOf(sceneName);
+        if(levelIndex >= 0)
         {
-            return levelFancyNames[sceneIndex];
+            return levelFancyNames[levelIndex];
         }
         return null;
     }
 
-    public string getMainMenuSceneName()
+    public static string getMainMenuSceneName()
     {
         return sceneName_MainMenu;
+    }
+
+
+    public static void UnlockLevelByLevelIndex(int levelIndex)
+    {
+        Debug.Log("LevelManager unlocked level with index " + levelIndex);
+        string keyName = LevelManager.getLevelUnlockedKeyForLevelByLevelIndex(levelIndex);
+        PlayerPrefs.SetInt(keyName, 1);
+        PlayerPrefs.Save();
+    }
+
+    public static string[] getLevelSceneNames()
+    {
+        return LevelManager.levelSceneNames.ToArray();
+    }
+
+    public static string[] getLevelFancyNames()
+    {
+        return LevelManager.levelFancyNames.ToArray();
+    }
+
+    private static string getLevelUnlockedKeyForLevelByLevelIndex(int levelIndex)
+    {
+        string[] levelSceneNames = LevelManager.getLevelSceneNames();
+        return "unlockedLevel_" + levelSceneNames[levelIndex];
+    }
+
+    public static bool isLevelUnlockedBySceneName(string sceneName)
+    {
+        int levelIndex = levelSceneNames.IndexOf(sceneName);
+        bool[] unlocked = LevelManager.getAllLevelsUnlockedStatus();
+        return unlocked[levelIndex];
+    }
+
+    public static bool[] getAllLevelsUnlockedStatus()
+    {
+        string[] levelSceneNames = LevelManager.getLevelSceneNames();
+        int numLevels = levelSceneNames.Length;
+        bool[] levelUnlocked = new bool[numLevels];
+        for (int i = 0; i < numLevels; i++)
+        {
+            levelUnlocked[i] = false;
+        }
+
+        string keyName;
+        for (int i = 0; i < numLevels; i++)
+        {
+            keyName = LevelManager.getLevelUnlockedKeyForLevelByLevelIndex(i);
+            if (PlayerPrefs.HasKey(keyName))
+            {
+                levelUnlocked[i] = (PlayerPrefs.GetInt(keyName) == 1);
+            }
+        }
+
+        if (numLevels > 0)
+        {
+            levelUnlocked[0] = true;    // first level is always available
+        }
+
+        return levelUnlocked;
     }
 }

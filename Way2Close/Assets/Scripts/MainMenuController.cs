@@ -69,10 +69,7 @@ public class MainMenuController : MonoBehaviour {
         panelAbout.SetActive(true);
     }
 
-    public string[] getLevelSceneNames()
-    {        
-        return LevelManager.levelSceneNames.ToArray();
-    }
+    
 
     public void ShowMenuPanelLevelSelect()
     {
@@ -80,21 +77,34 @@ public class MainMenuController : MonoBehaviour {
         panelLevelSelect.SetActive(true);
         panelAbout.SetActive(false);
 
-        setUnlockedLevelsInLevelSelectPanel();
+        SetUnlockedLevelsInLevelSelectPanel();
+        SetButtonLablesInLevelSelectPanel();
     }
 
-    void setUnlockedLevelsInLevelSelectPanel()
+    void SetButtonLablesInLevelSelectPanel()
     {
-        bool[] levelUnlocked = getLevelUnlockedStatus();
-        for(int i = 0; i < levelUnlocked.Length; i++)
+        string[] levelFancyNames = LevelManager.getLevelFancyNames();
+        for(int levelIndex = 0; levelIndex < levelFancyNames.Length; levelIndex++)
         {
-            setLevelButtonState(i, levelUnlocked[i]);
+            Button b = getLevelSelectButtonForLevel(levelIndex);
+            b.GetComponentInChildren<Text>().text = "Level " + levelIndex + ": " + levelFancyNames[levelIndex];
+        }
+
+        
+    }
+
+    void SetUnlockedLevelsInLevelSelectPanel()
+    {
+        bool[] levelUnlocked = LevelManager.getAllLevelsUnlockedStatus();
+        for(int levelIndex = 0; levelIndex < levelUnlocked.Length; levelIndex++)
+        {
+            setLevelButtonState(levelIndex, levelUnlocked[levelIndex]);
         }
     }
 
-    void setLevelButtonState(int level, bool state)
+    void setLevelButtonState(int levelIndex, bool state)
     {
-        Button b = getLevelSelectButtonForLevel(level);
+        Button b = getLevelSelectButtonForLevel(levelIndex);
         if( b != null)
         {
             b.interactable = state;
@@ -114,38 +124,7 @@ public class MainMenuController : MonoBehaviour {
         return null;
     }
     
-    bool[] getLevelUnlockedStatus()
-    {
-        string[] levelNames = getLevelSceneNames();
-        int numLevels = levelNames.Length;
-        bool[] levelUnlocked = new bool[numLevels];
-        for(int i = 0; i < numLevels; i++)
-        {
-            levelUnlocked[i] = false;
-        }
-        
-        string keyName;
-        for (int i = 0; i < numLevels; i++)
-        {
-            keyName = "unlockedLevel_" + levelNames[i];
-            if (PlayerPrefs.HasKey(keyName))
-            {
-                levelUnlocked[i] = (PlayerPrefs.GetInt(keyName) == 1);
-            }
-        }
+    
 
-        if (numLevels > 0)
-        {
-            levelUnlocked[0] = true;    // first level is always available
-        }
-
-        return levelUnlocked;
-    }
-
-    public void unlockLevel(int levelIndex)
-    {
-        string[] levelNames = getLevelSceneNames();
-        string keyName = "unlockedLevel_" + levelNames[levelIndex];
-        PlayerPrefs.SetInt(keyName, 1);
-    }
+    
 }

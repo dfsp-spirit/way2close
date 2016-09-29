@@ -80,7 +80,15 @@ public class LevelUIController : MonoBehaviour {
         float levelScore = GetComponent<CountScore>().GetLevelScore();
         float gameScore = GetComponent<CountScore>().GetGameScore();
         uiTextLevelDoneLine1.text = "Level score: " + levelScore.ToString("n2");
+        if(LeaderBoard.IsLevelHighscoreBySceneName(SceneManager.GetActiveScene().name, levelScore))
+        {
+            uiTextLevelDoneLine1.text = "New level highscore: " + levelScore.ToString("n2");
+        }
         uiTextLevelDoneLine2.text = "Total score: " + gameScore.ToString("n2");
+        if(LeaderBoard.IsGlobalHighscore(gameScore))
+        {
+            uiTextLevelDoneLine2.text = "New total highscore: " + gameScore.ToString("n2");
+        }
 
         if(SceneManager.GetActiveScene().name == LevelManager.sceneName_Tutorial || LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_TUTORIAL)
         {
@@ -112,6 +120,25 @@ public class LevelUIController : MonoBehaviour {
         }
             
 
+
+    }
+
+    void SaveScores()
+    {
+        float levelScore = GetComponent<CountScore>().GetLevelScore();
+        float gameScore = GetComponent<CountScore>().GetGameScore();
+
+        LeaderBoard.SetScoreThisGame(gameScore);
+
+        if (LeaderBoard.IsGlobalHighscore(gameScore))
+        {
+            LeaderBoard.SetGlobalHighscore(gameScore);
+        }
+
+        if(LeaderBoard.IsLevelHighscoreBySceneName(SceneManager.GetActiveScene().name, levelScore))
+        {
+            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore);
+        }
 
     }
 

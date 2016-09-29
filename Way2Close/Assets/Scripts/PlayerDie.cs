@@ -59,7 +59,8 @@ public class PlayerDie : MonoBehaviour {
                 gameController.GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
                 gameController.GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
                 gameController.GetComponent<CountScore>().SendMessage("UpdateHighscoreText");
-                gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");                
+                gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");
+                gameController.GetComponent<LevelUIController>().SendMessage("SaveScores");
             }
         }            
     }

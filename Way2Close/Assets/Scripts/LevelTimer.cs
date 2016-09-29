@@ -19,6 +19,8 @@ public class LevelTimer : MonoBehaviour {
         updateLevelTime = true;
         timeLeft = maxLevelTime;
         levelEnded = false;
+
+        LeaderBoard.Report();
     }
 	
 	
@@ -74,6 +76,7 @@ public class LevelTimer : MonoBehaviour {
         
     }
 
+    // called when the player reached the end of the level successfully. NOT called on player death.
     void EndLevel()
     {
         levelEnded = true;
@@ -82,7 +85,8 @@ public class LevelTimer : MonoBehaviour {
         GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
         timeLeft = 0.0F;    // prevent display of a slighty negative time at level end, like "-0.01 secsonds left"
         GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");
-
+        GetComponent<LevelUIController>().SendMessage("SaveScores");
+        GetComponent<LevelManager>().SendMessage("UnlockNextLevelIfAppropriate");        
         GameObject player = GameObject.Find("Player");
         player.SendMessage("SetLevelEndedPlayerMode");     
     }
