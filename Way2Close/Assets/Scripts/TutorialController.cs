@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class TutorialController : MonoBehaviour {
+public class TutorialController : LevelController {
 
     public GameObject tutorialPanel;
     public Text tutorialHeading;
@@ -14,12 +14,25 @@ public class TutorialController : MonoBehaviour {
     float showNextPanelInTime = 8.0F;
     float uiFadeDuration = 1.0F;
 
+    GameObject gameController;
+
+    override public float GetLevelDuration()
+    {
+        return 100.0F;
+    }
+
+    override public bool GetLevelHasFixedDuration()
+    {
+        return false;
+    }
+
     // Use this for initialization
     void Start () {
+        gameController = GameObject.Find("GameController");
         texts = tutorialPanel.GetComponentsInChildren<Text>();
         tutorialPanel.SetActive(false);
         Invoke("showWelcomeText", 1.0F);
-        GetComponent<LevelUIController>().SendMessage("HideInGameHUD");
+        gameController.GetComponent<LevelUIController>().SendMessage("HideInGameHUD");
     }
 
     void showWelcomeText()
@@ -82,8 +95,8 @@ public class TutorialController : MonoBehaviour {
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        GetComponent<LevelUIController>().SendMessage("ShowInGameHUD");
-        GetComponent<LevelUIController>().SendMessage("HideTimeAndWave");
+        gameController.GetComponent<LevelUIController>().SendMessage("ShowInGameHUD");
+        gameController.GetComponent<LevelUIController>().SendMessage("HideTimeAndWave");
 
         Invoke("showScoreMultiplierInfoText", showNextPanelInTime);
     }
@@ -100,7 +113,7 @@ public class TutorialController : MonoBehaviour {
 
     void spawnEnemyLines()
     {
-        GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
+        gameController.GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
         Invoke("showTutorialEndText", (showNextPanelInTime * 2.0F));
     }
 
@@ -123,7 +136,7 @@ public class TutorialController : MonoBehaviour {
     {
         for(int i = 0; i < enemyCount; i++)
         {
-            GetComponent<SpawnEnemies>().SendMessage("Spawn");
+            gameController.GetComponent<SpawnEnemies>().SendMessage("Spawn");
         }        
     }
 

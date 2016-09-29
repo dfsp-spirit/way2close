@@ -6,18 +6,28 @@ public class LevelTimer : MonoBehaviour {
 
 
     public Text timeLeftText;
-
+    public LevelController levelController;
 
     float timeSinceLevelLoaded;
-    float maxLevelTime = 10F;
+    float levelDuration;
+    bool levelHasFixedDuration;
     float timeLeft;
     bool updateLevelTime;
     bool levelEnded;
 
   
     void Start () {
+
+        levelDuration = levelController.GetLevelDuration();
+        levelHasFixedDuration = levelController.GetLevelHasFixedDuration();
+
+        if( ! levelHasFixedDuration)
+        {
+            timeLeftText.text = "";
+        }
+
         updateLevelTime = true;
-        timeLeft = maxLevelTime;
+        timeLeft = levelDuration;
         levelEnded = false;
 
         LeaderBoard.Report();
@@ -33,8 +43,11 @@ public class LevelTimer : MonoBehaviour {
     void Update()
     {
         UpdateTime();
-        UpdateTimerGUI();
-        CheckForLevelTimeEnded();
+        if (levelHasFixedDuration)
+        {
+            UpdateTimerGUI();
+            CheckForLevelTimeEnded();
+        }
     }
 
     void UpdateTime()
@@ -42,7 +55,7 @@ public class LevelTimer : MonoBehaviour {
         if (updateLevelTime)
         {
             timeSinceLevelLoaded = Time.timeSinceLevelLoad;
-            timeLeft = maxLevelTime - timeSinceLevelLoaded;
+            timeLeft = levelDuration - timeSinceLevelLoaded;
         }
     }
 
@@ -50,15 +63,15 @@ public class LevelTimer : MonoBehaviour {
     {
         timeLeftText.text = "Time left: " + timeLeft.ToString("n2");
         timeLeftText.color = Color.white;
-        if (timeLeft < (maxLevelTime * 0.5F))
+        if (timeLeft < (levelDuration * 0.5F))
         {
             timeLeftText.color = Color.yellow;
         }
-        if (timeLeft < (maxLevelTime * 0.25F))
+        if (timeLeft < (levelDuration * 0.25F))
         {
             timeLeftText.color = Color.magenta;
         }
-        if (timeLeft < (maxLevelTime * 0.1F))
+        if (timeLeft < (levelDuration * 0.1F))
         {
             timeLeftText.color = Color.red;
         }
