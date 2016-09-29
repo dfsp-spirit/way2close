@@ -5,11 +5,8 @@ public class Level1Controller : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        GetComponent<SpawnEnemies>().Spawn();
+    }
 	
-	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

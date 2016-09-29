@@ -86,7 +86,7 @@ public class CountScore : MonoBehaviour {
 
     int getCurrentWave()
     {        
-          return spawnEnemiesScript.currentWave;
+          return spawnEnemiesScript.GetCurrentWave();
     }
 
     public float GetLevelScore()

@@ -6,48 +6,35 @@ using UnityEngine.SceneManagement;
 
 public class SpawnEnemies : MonoBehaviour {
 
-    public Text levelText;
+    public Text waveText;
     
-    public GameObject[] enemyTypePrefabs;
-    public int numInitialEnemies;
-    public int numMaxEnemies;
-    public int currentWave;
-    public int numEnemiesAddedPerWave;
+    public GameObject[] enemyTypePrefabs;    
+    private int currentWave;
+    
     
 
     // Use this for initialization
     void Start()
     {
         currentWave = 0;        
-        levelText.text = "Wave " + currentWave.ToString();
-
-        if (SceneManager.GetActiveScene().name == "Level_0") {
-            Invoke("StartEnemySpawning", 3.0F); // wait 3 secs, because the player needs some time to adapt to the level and also cannot move for 3 secs
-        }
+        waveText.text = "Wave " + currentWave.ToString();
     }
 
-    void StartEnemySpawning()
+    public int GetCurrentWave()
     {
-        for (int i = 0; i < numInitialEnemies; i++)
-        {
-            Spawn();
-        }
-
-        InvokeRepeating("NextWave", 10f, 10f);
+        return currentWave;
     }
 
-    void NextWave()
+    // wave can be set by the LevelXController script of the respective level
+    public void SetCurrentWave(int wave)
     {
-        currentWave++;
-        levelText.text = "Wave: " + currentWave.ToString();
-
-        for (int i = 0; i < numEnemiesAddedPerWave; i++)
-        {
-            Spawn();
-        }
+        currentWave = wave;
+        UpdateWaveText();
     }
-	
-    void Spawn()
+
+
+
+    public void Spawn()
     {
         float objectRenderHeight;
         float objectRenderWidth;
@@ -70,7 +57,7 @@ public class SpawnEnemies : MonoBehaviour {
         Instantiate(enemy, worldPos, Quaternion.identity);
     }
 
-    void SpawnAtWorldPosition(Vector3 worldPos)
+    public void SpawnAtWorldPosition(Vector3 worldPos)
     {
         int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
         Instantiate(enemyTypePrefabs[enemyTypeIndex], worldPos, Quaternion.identity);
@@ -113,6 +100,17 @@ public class SpawnEnemies : MonoBehaviour {
         CancelInvoke();
     }
 
+    public void IncreaseWave()
+    {
+        currentWave++;
+        UpdateWaveText();
+    }
+
+
+    private void UpdateWaveText()
+    {
+        waveText.text = "Wave: " + currentWave.ToString();
+    }
     
 
     

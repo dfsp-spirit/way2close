@@ -59,20 +59,18 @@ public class LevelManager : MonoBehaviour {
     public void ButtonNextLevelClicked()
     {        
         int currentLevelIndex = GetCurrentLevelIndex();
-
+        Debug.Log("ButtonNextLevelClicked: Current level index is " + currentLevelIndex);
         if(currentLevelIndex >= 0)
         {
             int nextLevelIndex = currentLevelIndex + 1;
             if(nextLevelIndex >= 0 && nextLevelIndex < levelSceneNames.Count)
             {
                 string nextLevelSceneName = levelSceneNames[nextLevelIndex];
+                Debug.Log("ButtonNextLevelClicked: About to load next scene " + nextLevelSceneName + " with level index " + nextLevelIndex);
                 SceneManager.LoadScene(nextLevelSceneName);
             }
             
-        }
-
-        // fall back to main menu if something went wrong
-        SceneManager.LoadScene(sceneName_MainMenu);
+        }        
     }
 
     public static string GetLevelNameBySceneName(string sceneName)
