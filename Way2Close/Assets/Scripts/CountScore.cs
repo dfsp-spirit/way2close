@@ -30,9 +30,6 @@ public class CountScore : MonoBehaviour {
     GameObject player;
     //int numInitialEnemies;
     SpawnEnemies spawnEnemiesScript;
-    string highScoreThisLevelKey;
-    public static string highScoreTotalEverKey = "Highscore";
-    public static string totalScoreThisGameKey = "ScoreThisGame";
 
     void Start () {
         levelScore = 0.0F;
@@ -54,44 +51,13 @@ public class CountScore : MonoBehaviour {
     }
 
     
-    public void GameEndedResetGameScore()
-    {
-        PlayerPrefs.SetFloat(totalScoreThisGameKey, 0.0F);
-        PlayerPrefs.Save();
-    }
+    
 
     void initHighScores()
     {
-        if (PlayerPrefs.HasKey(totalScoreThisGameKey))
-        {
-            this.gameScore = PlayerPrefs.GetFloat(totalScoreThisGameKey);
-        }
-        else
-        {
-            this.gameScore = 0.0F;
-        }
-
-        this.highScoreThisLevelKey = "Highscore_" + SceneManager.GetActiveScene().name;
-
-        
-        if (PlayerPrefs.HasKey(highScoreThisLevelKey))
-        {
-            beginningHighscoreThisLevel = PlayerPrefs.GetFloat(highScoreThisLevelKey);
-        }
-        else
-        {
-            beginningHighscoreThisLevel = 0.0F;
-        }
-
-        
-        if (PlayerPrefs.HasKey(highScoreTotalEverKey))
-        {
-            beginningHighScoreTotalEver = PlayerPrefs.GetFloat(highScoreTotalEverKey);
-        }
-        else
-        {
-            beginningHighScoreTotalEver = 0.0F;
-        }
+        gameScore = LeaderBoard.GetScoreThisGame();
+        beginningHighscoreThisLevel = LeaderBoard.GetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name);        
+        beginningHighScoreTotalEver = LeaderBoard.GetGlobalHighscore();       
     }
 
     void disableOnDeathUI()
@@ -126,6 +92,11 @@ public class CountScore : MonoBehaviour {
     public float GetLevelScore()
     {
         return levelScore;
+    }
+
+    public float GetGameScore()
+    {
+        return gameScore;
     }
 
     void Update () {
@@ -208,7 +179,9 @@ public class CountScore : MonoBehaviour {
 
         if (addScore)
         {
-            levelScore += multiplier * (Time.deltaTime * scorePerSecond);
+            float addedScore = multiplier * (Time.deltaTime * scorePerSecond);
+            levelScore += addedScore;
+            gameScore += addedScore;
         }
 
 
@@ -244,19 +217,27 @@ public class CountScore : MonoBehaviour {
         textDeadTitle.text = "YOU ARE DEAD";
         textDeadLine1.text = "Score this level: " + levelScore.ToString("n2");
         textDeadLine2.text = "Highscore this level: " + beginningHighscoreThisLevel.ToString("n2");
+        bool levelHighscore = false;
+        bool gameHighscore = false;
         if (levelScore > beginningHighscoreThisLevel)
         {
-            PlayerPrefs.SetFloat(highScoreThisLevelKey, levelScore);
-            PlayerPrefs.Save();
+            levelHighscore = true;
+            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore);
             textDeadLine1.text = "New Highscore for level!";
             textDeadLine2.text = levelScore.ToString("n2");
         }        
         if(gameScore > beginningHighScoreTotalEver)
         {
-            PlayerPrefs.SetFloat(highScoreTotalEverKey, gameScore);
-            PlayerPrefs.Save();
+            gameHighscore = true;
+            LeaderBoard.SetGlobalHighscore(gameScore);
             textDeadLine1.text = "New total Highscore!";
             textDeadLine2.text = gameScore.ToString("n2");
+        }
+        
+        if(levelHighscore && gameHighscore)
+        {
+            textDeadLine1.text = "New level and total Highscores!";
+            textDeadLine2.text = "Level: " + levelScore.ToString("n2")  + " Total: " + gameScore.ToString("n2");
         }
     }
 
@@ -280,14 +261,14 @@ public class CountScore : MonoBehaviour {
 
     public void ButtonRestartLevelClicked()
     {
-        GetComponent<CountScore>().SendMessage("GameEndedResetGameScore");
+        LeaderBoard.ResetScoreThisGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         
     }
 
     public void ButtonToMainMenuClicked()
     {
-        GetComponent<CountScore>().SendMessage("GameEndedResetGameScore");
-        SceneManager.LoadScene("MainMenu");
+        LeaderBoard.ResetScoreThisGame();
+        SceneManager.LoadScene(LevelManager.sceneName_MainMenu);
     }
 }

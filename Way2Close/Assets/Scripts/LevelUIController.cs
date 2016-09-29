@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelUIController : MonoBehaviour {
 
@@ -67,22 +68,51 @@ public class LevelUIController : MonoBehaviour {
     {                        
         SetShowLevelDonePanel(true);
         bool nextLevelExists = GetComponent<LevelManager>().nextLevelExists();
-        buttonLevelDonePlayNext.gameObject.SetActive(nextLevelExists);
+
+        // only show next next button in game mode (if such a level exists), not in training or tutorial modes
+        buttonLevelDonePlayNext.gameObject.SetActive(false);    
+        if (LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_GAME)
+        {
+            buttonLevelDonePlayNext.gameObject.SetActive(nextLevelExists);
+        }
+            
 
         float levelScore = GetComponent<CountScore>().GetLevelScore();
-        uiTextLevelDoneLine1.text = "Score for this level: " + levelScore.ToString("n2");
-        uiTextLevelDoneLine1.text = "Total score: ";
+        float gameScore = GetComponent<CountScore>().GetGameScore();
+        uiTextLevelDoneLine1.text = "Level score: " + levelScore.ToString("n2");
+        uiTextLevelDoneLine2.text = "Total score: " + gameScore.ToString("n2");
 
-        if (nextLevelExists)
+        if(SceneManager.GetActiveScene().name == LevelManager.sceneName_Tutorial || LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_TUTORIAL)
         {
-            uiTextLevelDoneTitle.text = "Level Completed!";
-            buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Abort to Main menu";
-        }
-        else
-        {
-            uiTextLevelDoneTitle.text = "Game Completed!";
+            buttonLevelDonePlayNext.gameObject.SetActive(false);
+            uiTextLevelDoneTitle.text = "Tutorial completed.";
+            uiTextLevelDoneLine2.text = "";
             buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Back to Main menu";
         }
+
+        if (LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_GAME)
+        {
+            if (nextLevelExists)
+            {
+                uiTextLevelDoneTitle.text = "Level completed!";
+                buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Abort to Main menu";
+            }
+            else
+            {
+                uiTextLevelDoneTitle.text = "Game completed!";
+                buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Back to Main menu";
+            }
+        }
+
+        if (LeaderBoard.GetGameModeThisGame() == LeaderBoard.GAMEMODE_TRAINING)
+        {
+            uiTextLevelDoneLine2.text = "";
+            uiTextLevelDoneTitle.text = "Training level completed!";
+            buttonLevelDoneToMainMenu.GetComponentInChildren<Text>().text = "Back to Main menu";
+        }
+            
+
+
     }
 
     void HideLevelDonePanel()

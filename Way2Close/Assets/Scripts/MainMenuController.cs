@@ -11,30 +11,33 @@ public class MainMenuController : MonoBehaviour {
 
     void Start()
     {
-        // reset score of the current game whenever the player enters the main menu
-        PlayerPrefs.SetFloat(CountScore.totalScoreThisGameKey, 0.0F);
-        PlayerPrefs.Save();
+        LeaderBoard.ResetScoreThisGame();
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_NONE_YET);
 
         ShowMenuPanelMain();
     }
 
     public void ClickPlay()
     {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_GAME);
         SceneManager.LoadScene(LevelManager.sceneName_Level_0);
     }
 
     public void ClickTutorial()
     {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_TUTORIAL);
         SceneManager.LoadScene(LevelManager.sceneName_Tutorial);
     }
 
     public void ClickTrainingLevel0()
     {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_TRAINING);
         SceneManager.LoadScene(LevelManager.sceneName_Level_0);
     }
 
     public void ClickTrainingLevel1()
     {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_TRAINING);
         SceneManager.LoadScene(LevelManager.sceneName_Level_1);
     }
 
