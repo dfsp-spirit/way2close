@@ -12,8 +12,8 @@ public class LevelManager : MonoBehaviour {
     public static string sceneName_MainMenu = "MainMenu";
     public static string sceneName_Tutorial = "Tutorial";
 
-    public static List<string> levelFancyNames = new List<string>() { "Randomness" };
-    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0 };
+    public static List<string> levelFancyNames = new List<string>() { "Randomness", "Stairs" };
+    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1 };
         
 
     public bool nextLevelExists()
