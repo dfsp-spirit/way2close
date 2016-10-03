@@ -5,10 +5,9 @@ public class Level0Controller : LevelController {
 
     private int numInitialEnemies = 6;
     private int numEnemiesAddedPerWave = 2;
-    GameObject gameController;
-    
-    void Start () {
-        gameController = GameObject.Find("GameController");
+
+    protected override void Start () {
+        base.Start();        
         Invoke("StartEnemySpawning", 3.0F);
     }
 

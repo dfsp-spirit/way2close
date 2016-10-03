@@ -66,7 +66,7 @@ public class TutorialController : LevelController {
         Invoke("HidePanel", showPanelDuration);
         SpawnNumEnemies(3);
 
-        Invoke("showWellDoneInfoText", (showNextPanelInTime * 2.0F));
+        Invoke("showWellDoneInfoText", (showNextPanelInTime * 1.5F));
     }
 
     void showWellDoneInfoText()

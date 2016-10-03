@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Level1Controller : LevelController {
 
-    GameObject gameController;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    protected override void Start () {
+        base.Start();
         gameController = GameObject.Find("GameController");
         gameController.GetComponent<SpawnEnemies>().Spawn();
     }
