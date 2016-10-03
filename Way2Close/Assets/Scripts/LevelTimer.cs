@@ -99,8 +99,15 @@ public class LevelTimer : MonoBehaviour {
         timeLeft = 0.0F;    // prevent display of a slighty negative time at level end, like "-0.01 secsonds left"
         GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");
         GetComponent<LevelUIController>().SendMessage("SaveScores");
-        GetComponent<LevelManager>().SendMessage("UnlockNextLevelIfAppropriate");        
+        GetComponent<LevelManager>().SendMessage("UnlockNextLevelIfAppropriate");
+
         GameObject player = GameObject.Find("Player");
-        player.SendMessage("SetLevelEndedPlayerMode");     
+        player.SendMessage("SetLevelEndedPlayerMode");
+
+        GameObject levelContollerHolder = GameObject.Find("LevelControllerHolder");
+        if(levelContollerHolder != null)
+        {
+            levelContollerHolder.GetComponent<LevelController>().SendMessage("SetLevelEndedLevelControllerMode");
+        }
     }
 }

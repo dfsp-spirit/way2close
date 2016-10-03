@@ -22,11 +22,11 @@ public class TutorialController : LevelController {
     // Use this for initialization
     protected override void Start () {
         base.Start();        
-        Invoke("showWelcomeText", 1.0F);
+        Invoke("ShowWelcomeText", 1.0F);
         gameController.GetComponent<LevelUIController>().SendMessage("HideInGameHUD");
     }
 
-    void showWelcomeText()
+    void ShowWelcomeText()
     {
         levelTextHeading.text = "Welcome to the Way2Close Tutorial";
         levelTextLine.text = "";
@@ -35,30 +35,30 @@ public class TutorialController : LevelController {
 
         //GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
 
-        Invoke("showControlInfoText", showNextPanelInTime);
+        Invoke("ShowControlInfoText", showNextPanelInTime);
     }
 
-    void showControlInfoText()
+    void ShowControlInfoText()
     {
         levelTextHeading.text = "Controling your ship is a matter of thrust";
         levelTextLine.text = "Tap or hold the thrust control to fly up. Release to fall down.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        Invoke("showCoreInfoText", showNextPanelInTime);
+        Invoke("ShowCoreInfoText", showNextPanelInTime);
     }
 
-    void showCoreInfoText()
+    void ShowCoreInfoText()
     {
         levelTextHeading.text = "Protect your vulnerable red core";
         levelTextLine.text = "Your ship can overlap with enemies and obstacles, but its core must not.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        Invoke("showEnemiesIncomingInfoText", showNextPanelInTime);
+        Invoke("ShowEnemiesIncomingInfoText", showNextPanelInTime);
     }
 
-    void showEnemiesIncomingInfoText()
+    void ShowEnemiesIncomingInfoText()
     {
         levelTextHeading.text = "WARNING: Enemies incoming.";
         levelTextLine.text = "Avoid all incoming enemies.";
@@ -66,20 +66,20 @@ public class TutorialController : LevelController {
         Invoke("HidePanel", showPanelDuration);
         SpawnNumEnemies(3);
 
-        Invoke("showWellDoneInfoText", (showNextPanelInTime * 1.5F));
+        Invoke("ShowWellDoneInfoText", (showNextPanelInTime * 1.5F));
     }
 
-    void showWellDoneInfoText()
+    void ShowWellDoneInfoText()
     {
         levelTextHeading.text = "Well done.";
         levelTextLine.text = "Now let's learn howto score more points.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        Invoke("showScoreInfoText", showNextPanelInTime);
+        Invoke("ShowScoreInfoText", showNextPanelInTime);
     }
 
-    void showScoreInfoText()
+    void ShowScoreInfoText()
     {
         levelTextHeading.text = "Surviving is not enough.";
         levelTextLine.text = "You earn points for each second you survive. But increasing your multiplier is the key to glory.";
@@ -89,26 +89,26 @@ public class TutorialController : LevelController {
         gameController.GetComponent<LevelUIController>().SendMessage("ShowInGameHUD");
         gameController.GetComponent<LevelUIController>().SendMessage("HideTimeAndWave");
 
-        Invoke("showScoreMultiplierInfoText", showNextPanelInTime);
+        Invoke("ShowScoreMultiplierInfoText", showNextPanelInTime);
     }
 
-    void showScoreMultiplierInfoText()
+    void ShowScoreMultiplierInfoText()
     {
         levelTextHeading.text = "Approach enemies to increase the multiplier.";
         levelTextLine.text = "A line will appear, indicating enemies that currently increase your multiplier.";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
         
-        Invoke("spawnEnemyLines", showNextPanelInTime);
+        Invoke("SpawnEnemyLines", showNextPanelInTime);
     }
 
-    void spawnEnemyLines()
+    void SpawnEnemyLines()
     {
         gameController.GetComponent<SpawnEnemies>().SpawnUpdwardsLineDefault();
-        Invoke("showTutorialEndText", (showNextPanelInTime * 2.0F));
+        Invoke("ShowTutorialEndText", (showNextPanelInTime * 2.0F));
     }
 
-    void showTutorialEndText()
+    void ShowTutorialEndText()
     {
         levelTextHeading.text = "Well done. Time to play the game!";
         levelTextLine.text = "This concludes the tutorial.";
@@ -128,7 +128,15 @@ public class TutorialController : LevelController {
         }        
     }
 
+    override protected void SetLevelEndedLevelControllerMode()
+    {
+        // nothing to do for tutorial
+    }
 
-   
-	
+    override protected int GetCurrentLevelIndex()
+    {
+        return -1;
+    }
+
+
 }

@@ -7,7 +7,8 @@ public class Level0Controller : LevelController {
     private int numEnemiesAddedPerWave = 2;
 
     protected override void Start () {
-        base.Start();        
+        base.Start();
+        Invoke("ShowWelcomeText", 1.0F);
         Invoke("StartEnemySpawning", 3.0F);
     }
 
@@ -19,6 +20,14 @@ public class Level0Controller : LevelController {
     override public bool GetLevelHasFixedDuration()
     {
         return true;
+    }
+
+    void ShowWelcomeText()
+    {
+        levelTextHeading.text = "Level 0";
+        levelTextLine.text = "Get ready";
+        ShowPanel();
+        Invoke("HidePanel", showPanelDuration);
     }
 
     void StartEnemySpawning()
@@ -45,4 +54,15 @@ public class Level0Controller : LevelController {
     {
         CancelInvoke();
     }
+
+    override protected void SetLevelEndedLevelControllerMode()
+    {
+        // nothing to do for Level_0
+    }
+
+    override protected int GetCurrentLevelIndex()
+    {
+        return 0;
+    }
+
 }

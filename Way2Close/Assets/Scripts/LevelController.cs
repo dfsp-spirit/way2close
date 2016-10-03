@@ -58,5 +58,10 @@ public abstract class LevelController : MonoBehaviour {
         SceneManager.LoadScene("MainMenu");
     }
 
+    // you can do stuff like freeze the moving level parts or cancel spawn waves here if needed
+    protected abstract void SetLevelEndedLevelControllerMode();
+
+    protected abstract int GetCurrentLevelIndex();
+
 
 }
