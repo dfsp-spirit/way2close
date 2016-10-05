@@ -10,14 +10,16 @@ public class SpawnEnemies : MonoBehaviour {
     
     public GameObject[] enemyTypePrefabs;    
     private int currentWave;
-    
-    
+
+    GameObject activePrefab;
+    private bool randomEnemies;
 
     // Use this for initialization
     void Start()
     {
         currentWave = 0;        
         waveText.text = "Wave " + currentWave.ToString();
+        SetUseRandomEnemyFromPrefabs();
     }
 
     public int GetCurrentWave()
@@ -32,14 +34,37 @@ public class SpawnEnemies : MonoBehaviour {
         UpdateWaveText();
     }
 
+    public void SetUseRandomEnemyFromPrefabs()
+    {
+        this.randomEnemies = true;
+    }
+
+    public void SetActivePrefab(GameObject enemyPrefab)
+    {
+        this.randomEnemies = false;
+        this.activePrefab = enemyPrefab;
+    }
+
+    public GameObject GetEnemyPrefabForSpawning()
+    {
+        if(this.randomEnemies)
+        {
+            int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
+            GameObject enemy = enemyTypePrefabs[enemyTypeIndex];
+            return enemy;
+        }
+        else
+        {
+            return this.activePrefab;
+        }
+    }
 
 
     public void Spawn()
     {
         float objectRenderHeight;
         float objectRenderWidth;
-        int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
-        GameObject enemy = enemyTypePrefabs[enemyTypeIndex];
+        GameObject enemy = GetEnemyPrefabForSpawning();
         objectRenderWidth = enemy.GetComponent<Renderer>().bounds.size.x;
         objectRenderHeight = enemy.GetComponent<Renderer>().bounds.size.y;
 
@@ -59,11 +84,10 @@ public class SpawnEnemies : MonoBehaviour {
 
     public void SpawnAtWorldPosition(Vector3 worldPos)
     {
-        int enemyTypeIndex = Random.Range(0, enemyTypePrefabs.Length);
-        Instantiate(enemyTypePrefabs[enemyTypeIndex], worldPos, Quaternion.identity);
+        Instantiate(GetEnemyPrefabForSpawning(), worldPos, Quaternion.identity);
     }
 
-    public void SpawnUpdwardsLine(GameObject prefab, Vector3 firstPos, int numObjects, Vector3 shiftVector)
+    public void SpawnUpdwardsLine(Vector3 firstPos, int numObjects, Vector3 shiftVector)
     {
         List<Vector3> positions = new List<Vector3>();
 
@@ -75,23 +99,22 @@ public class SpawnEnemies : MonoBehaviour {
             }
         }
 
-        spawnFromWorldPositionsList(positions, prefab);
+        SpawnFromWorldPositionsList(positions);
     }
 
     public void SpawnUpdwardsLineDefault()
     {
-        GameObject prefab = enemyTypePrefabs[0];
         Vector3 firstPos = new Vector3(5.0F, -5.0F, 0.0F);
         int numObjects = 8;
         Vector3 shiftVector = new Vector3(1.0F, 1.0F, 0.0F);
-        SpawnUpdwardsLine(prefab, firstPos, numObjects, shiftVector);
+        SpawnUpdwardsLine(firstPos, numObjects, shiftVector);
     }
 
-    private void spawnFromWorldPositionsList(List<Vector3> positions, GameObject prefab)
+    private void SpawnFromWorldPositionsList(List<Vector3> positions)
     {
         foreach(Vector3 worldPos in positions)
         {
-            Instantiate(prefab, worldPos, Quaternion.identity);
+            Instantiate(GetEnemyPrefabForSpawning(), worldPos, Quaternion.identity);
         }
     }
 

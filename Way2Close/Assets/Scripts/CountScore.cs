@@ -215,8 +215,8 @@ public class CountScore : MonoBehaviour {
     void UpdateHighscoreText()
     {
         textDeadTitle.text = "YOU ARE DEAD";
-        textDeadLine1.text = "Score this level: " + levelScore.ToString("n2");
-        textDeadLine2.text = "Highscore this level: " + beginningHighscoreThisLevel.ToString("n2");
+        textDeadLine1.text = "Your score for this level: " + levelScore.ToString("n2");
+        textDeadLine2.text = "Highscore for this level: " + beginningHighscoreThisLevel.ToString("n2");
         bool levelHighscore = false;
         bool gameHighscore = false;
         if (levelScore > beginningHighscoreThisLevel)
