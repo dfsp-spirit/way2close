@@ -87,7 +87,7 @@ public class SpawnEnemies : MonoBehaviour {
         Instantiate(GetEnemyPrefabForSpawning(), worldPos, Quaternion.identity);
     }
 
-    public void SpawnUpdwardsLine(Vector3 firstPos, int numObjects, Vector3 shiftVector)
+    public void SpawnLine(Vector3 firstPos, int numObjects, Vector3 shiftVector)
     {
         List<Vector3> positions = new List<Vector3>();
 
@@ -107,7 +107,7 @@ public class SpawnEnemies : MonoBehaviour {
         Vector3 firstPos = new Vector3(5.0F, -5.0F, 0.0F);
         int numObjects = 8;
         Vector3 shiftVector = new Vector3(1.0F, 1.0F, 0.0F);
-        SpawnUpdwardsLine(firstPos, numObjects, shiftVector);
+        SpawnLine(firstPos, numObjects, shiftVector);
     }
 
     private void SpawnFromWorldPositionsList(List<Vector3> positions)
