@@ -89,8 +89,8 @@ public class LevelTimer : MonoBehaviour {
         
     }
 
-    // called when the player reached the end of the level successfully. NOT called on player death.
-    void EndLevel()
+    // called when the player reached the end of the level successfully. NOT called on player death. This is called automatically by the LevelTimer if the level has a limited time, otherwise it needs to be called manually from the LevelController.
+    public void EndLevel()
     {
         levelEnded = true;
         GetComponent<CountScore>().SendMessage("StopAddingScore");
@@ -108,6 +108,10 @@ public class LevelTimer : MonoBehaviour {
         if(levelContollerHolder != null)
         {
             levelContollerHolder.GetComponent<LevelController>().SendMessage("SetLevelEndedLevelControllerMode");
+        }
+        else
+        {
+            Debug.Log("No LevelControllerHolder found, could not send message to end level.");
         }
     }
 }

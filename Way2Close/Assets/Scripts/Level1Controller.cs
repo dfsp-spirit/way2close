@@ -7,6 +7,8 @@ public class Level1Controller : LevelController {
     Vector3 firstPos;
 
     float RIGHT_SCREEN_BORDER = 5.0F;
+    float SCREEN_Y_TOP = +5.0F;
+    float SCREEN_Y_BOTTOM = -5.0F;
     private static Vector3 shiftVectorHorizontal = new Vector3(1.5F, 0.0F, 0.0F);
     private static Vector3 shiftVectorVerticalUp = new Vector3(0.0F, 1.5F, 0.0F);
     private static Vector3 shiftVectorVerticalDown = new Vector3(0.0F, -1.5F, 0.0F);
@@ -23,7 +25,7 @@ public class Level1Controller : LevelController {
 
     override public float GetLevelDuration()
     {
-        return 100.0F;
+        return 80.0F;
     }
 
     override public bool GetLevelHasFixedDuration()
@@ -33,7 +35,7 @@ public class Level1Controller : LevelController {
 
     override protected void SetLevelEndedLevelControllerMode()
     {
-        // nothing to do for Level_1
+        CancelInvoke();
     }
 
     override protected int GetCurrentLevelIndex()
@@ -80,7 +82,7 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(2);
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, -5.0F, 0.0F);
+        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_BOTTOM, 0.0F);
         spawner.SpawnLine(firstPos, 8, shiftVectorDiagonalUp);
         spawner.SpawnLine(VectorTools.PosAbove(firstPos, 5.0F), 8, shiftVectorDiagonalUp);
 
@@ -92,9 +94,9 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(3);
 
-        float xdist = 5.0F;
+        float xdist = 7.0F;
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, -5.0F, 0.0F);
+        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_BOTTOM, 0.0F);
         spawner.SpawnLine(firstPos, 5, shiftVectorVerticalUp);
         spawner.SpawnLine(new Vector3(RIGHT_SCREEN_BORDER + xdist, 0.0F, 0.0F), 5, shiftVectorVerticalUp);
         spawner.SpawnLine(new Vector3(RIGHT_SCREEN_BORDER + (xdist * 2), -5.0F, 0.0F), 5, shiftVectorVerticalUp);
@@ -102,23 +104,58 @@ public class Level1Controller : LevelController {
         Invoke("SpawnWave4", showNextPanelInTime * 1.5F);
     }
 
+    private Vector3 GetSpacerX()
+    {
+        return new Vector3(1.5F, 0.0F, 0.0F);
+    }
+
+    private Vector3 GetSpacerY()
+    {
+        return new Vector3(0.0F, 1.5F, 0.0F); ;
+    }
+
     // spawn 2 close parallel horizontal lines, and close other paths
     void SpawnWave4()
     {
         spawner.SetCurrentWave(4);
-
-        Vector3 spacerX = new Vector3(1.5F, 0.0F, 0.0F);
-        Vector3 spacerY = new Vector3(0.0F, 1.5F, 0.0F);
 
         Vector3 firstPosUpper = new Vector3(RIGHT_SCREEN_BORDER, 2.0F, 0.0F);
         Vector3 firstPosLower = new Vector3(RIGHT_SCREEN_BORDER, -2.0F, 0.0F);
         spawner.SpawnLine(firstPosUpper, 8, shiftVectorHorizontal);
         spawner.SpawnLine(firstPosLower, 8, shiftVectorHorizontal);
 
-        spawner.SpawnLine(firstPosUpper + spacerY, 4, shiftVectorVerticalUp);
-        spawner.SpawnLine(firstPosLower - spacerY, 4, shiftVectorVerticalDown);
+        spawner.SpawnLine(firstPosUpper + GetSpacerY(), 4, shiftVectorVerticalUp);
+        spawner.SpawnLine(firstPosLower - GetSpacerY(), 4, shiftVectorVerticalDown);
 
-        //Invoke("SpawnWave2", (showNextPanelInTime * 1.0F));
+        Invoke("SpawnWave5", (showNextPanelInTime * 1.0F));
+    }
+
+    // spawn 2 closeR parallel horizontal lines, and close other paths
+    void SpawnWave5()
+    {
+        spawner.SetCurrentWave(5);
+
+        Vector3 firstPosUpper = new Vector3(RIGHT_SCREEN_BORDER, 1.5F, 0.0F);
+        Vector3 firstPosLower = new Vector3(RIGHT_SCREEN_BORDER, -1.5F, 0.0F);
+        spawner.SpawnLine(firstPosUpper, 8, shiftVectorHorizontal);
+        spawner.SpawnLine(firstPosLower, 8, shiftVectorHorizontal);
+
+        spawner.SpawnLine(firstPosUpper + GetSpacerY(), 4, shiftVectorVerticalUp);
+        spawner.SpawnLine(firstPosLower - GetSpacerY(), 4, shiftVectorVerticalDown);
+
+        Invoke("SpawnWave6", (showNextPanelInTime * 1.0F));
+    }
+
+    // spawn 2 diagonal lines (to the lower right) above each other
+    void SpawnWave6()
+    {
+        spawner.SetCurrentWave(6);
+
+        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_TOP, 0.0F);
+        spawner.SpawnLine(firstPos, 8, shiftVectorDiagonalDown);
+        spawner.SpawnLine(VectorTools.PosBelow(firstPos, 5.0F), 8, shiftVectorDiagonalDown);
+
+        //Invoke("SpawnWave3", (showNextPanelInTime * 1.0F));
     }
 
 }
