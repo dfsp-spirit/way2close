@@ -6,9 +6,10 @@ public class Level1Controller : LevelController {
     SpawnEnemies spawner;
     Vector3 firstPos;
 
-    float RIGHT_SCREEN_BORDER = 5.0F;
-    float SCREEN_Y_TOP = +5.0F;
-    float SCREEN_Y_BOTTOM = -5.0F;
+    float WORLD_X_RIGHT_BORDER = 5.0F;
+    float WORLD_Y_TOP = +5.0F;
+    float WORLD_Y_BOTTOM = -5.0F;
+    float WORLD_Y_CENTER = 0.0F;
     private static Vector3 shiftVectorHorizontal = new Vector3(1.5F, 0.0F, 0.0F);
     private static Vector3 shiftVectorVerticalUp = new Vector3(0.0F, 1.5F, 0.0F);
     private static Vector3 shiftVectorVerticalDown = new Vector3(0.0F, -1.5F, 0.0F);
@@ -59,7 +60,7 @@ public class Level1Controller : LevelController {
     // spawn a diagonal line (to the upper right)
     void SpawnWave0()
     {        
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, -5.0F, 0.0F);
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, -5.0F, 0.0F);
         spawner.SpawnLine(firstPos, 8, shiftVectorDiagonalUp);        
 
         Invoke("SpawnWave1", (showNextPanelInTime * 1.0F));
@@ -70,9 +71,9 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(1);
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, 2.0F, 0.0F);        
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, 2.0F, 0.0F);        
         spawner.SpawnLine(firstPos, 8, shiftVectorHorizontal);
-        spawner.SpawnLine(new Vector3(RIGHT_SCREEN_BORDER, -2.0F, 0.0F), 8, shiftVectorHorizontal);
+        spawner.SpawnLine(new Vector3(WORLD_X_RIGHT_BORDER, -2.0F, 0.0F), 8, shiftVectorHorizontal);
 
         Invoke("SpawnWave2", (showNextPanelInTime * 1.0F));
     }
@@ -82,7 +83,7 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(2);
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_BOTTOM, 0.0F);
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, WORLD_Y_BOTTOM, 0.0F);
         spawner.SpawnLine(firstPos, 8, shiftVectorDiagonalUp);
         spawner.SpawnLine(VectorTools.PosAbove(firstPos, 5.0F), 8, shiftVectorDiagonalUp);
 
@@ -94,12 +95,12 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(3);
 
-        float xdist = 7.0F;
+        float xDistBetweenLines = 7.0F;
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_BOTTOM, 0.0F);
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, WORLD_Y_BOTTOM, 0.0F);
         spawner.SpawnLine(firstPos, 5, shiftVectorVerticalUp);
-        spawner.SpawnLine(new Vector3(RIGHT_SCREEN_BORDER + xdist, 0.0F, 0.0F), 5, shiftVectorVerticalUp);
-        spawner.SpawnLine(new Vector3(RIGHT_SCREEN_BORDER + (xdist * 2), -5.0F, 0.0F), 5, shiftVectorVerticalUp);
+        spawner.SpawnLine(new Vector3(WORLD_X_RIGHT_BORDER + xDistBetweenLines, 0.0F, 0.0F), 5, shiftVectorVerticalUp);
+        spawner.SpawnLine(new Vector3(WORLD_X_RIGHT_BORDER + (xDistBetweenLines * 2), -5.0F, 0.0F), 5, shiftVectorVerticalUp);
 
         Invoke("SpawnWave4", showNextPanelInTime * 1.5F);
     }
@@ -119,8 +120,8 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(4);
 
-        Vector3 firstPosUpper = new Vector3(RIGHT_SCREEN_BORDER, 2.0F, 0.0F);
-        Vector3 firstPosLower = new Vector3(RIGHT_SCREEN_BORDER, -2.0F, 0.0F);
+        Vector3 firstPosUpper = new Vector3(WORLD_X_RIGHT_BORDER, 2.0F, 0.0F);
+        Vector3 firstPosLower = new Vector3(WORLD_X_RIGHT_BORDER, -2.0F, 0.0F);
         spawner.SpawnLine(firstPosUpper, 8, shiftVectorHorizontal);
         spawner.SpawnLine(firstPosLower, 8, shiftVectorHorizontal);
 
@@ -130,13 +131,13 @@ public class Level1Controller : LevelController {
         Invoke("SpawnWave5", (showNextPanelInTime * 1.0F));
     }
 
-    // spawn 2 closeR parallel horizontal lines, and close other paths
+    // spawn 2 even closer parallel horizontal lines, and close other paths
     void SpawnWave5()
     {
         spawner.SetCurrentWave(5);
 
-        Vector3 firstPosUpper = new Vector3(RIGHT_SCREEN_BORDER, 1.5F, 0.0F);
-        Vector3 firstPosLower = new Vector3(RIGHT_SCREEN_BORDER, -1.5F, 0.0F);
+        Vector3 firstPosUpper = new Vector3(WORLD_X_RIGHT_BORDER, 1.5F, 0.0F);
+        Vector3 firstPosLower = new Vector3(WORLD_X_RIGHT_BORDER, -1.5F, 0.0F);
         spawner.SpawnLine(firstPosUpper, 8, shiftVectorHorizontal);
         spawner.SpawnLine(firstPosLower, 8, shiftVectorHorizontal);
 
@@ -151,11 +152,33 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(6);
 
-        firstPos = new Vector3(RIGHT_SCREEN_BORDER, SCREEN_Y_TOP, 0.0F);
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, WORLD_Y_TOP, 0.0F);
         spawner.SpawnLine(firstPos, 8, shiftVectorDiagonalDown);
         spawner.SpawnLine(VectorTools.PosBelow(firstPos, 5.0F), 8, shiftVectorDiagonalDown);
 
-        //Invoke("SpawnWave3", (showNextPanelInTime * 1.0F));
+        Invoke("SpawnWave7", (showNextPanelInTime * 1.0F));
+    }
+
+    // spawn 3 gates, where a gate is a vertical line with only one spot where the player can get through
+    void SpawnWave7()
+    {
+        spawner.SetCurrentWave(7);
+
+        float xDistBetweenGates = 7.0F;
+
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER, WORLD_Y_CENTER, 0.0F);
+        spawner.SpawnLine(firstPos, 5, shiftVectorVerticalUp);
+        spawner.SpawnLine(firstPos - (GetSpacerY() * 2), 5, shiftVectorVerticalDown);
+
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER + (xDistBetweenGates * 1), WORLD_Y_CENTER + GetSpacerY().y, 0.0F);
+        spawner.SpawnLine(firstPos, 5, shiftVectorVerticalUp);
+        spawner.SpawnLine(firstPos - (GetSpacerY() * 2), 5, shiftVectorVerticalDown);
+
+        firstPos = new Vector3(WORLD_X_RIGHT_BORDER + (xDistBetweenGates * 2), WORLD_Y_CENTER - GetSpacerY().y, 0.0F);
+        spawner.SpawnLine(firstPos, 5, shiftVectorVerticalUp);
+        spawner.SpawnLine(firstPos - (GetSpacerY() * 2), 5, shiftVectorVerticalDown);
+
+        Invoke("EndLevel", (showNextPanelInTime * 2.0F));
     }
 
 }

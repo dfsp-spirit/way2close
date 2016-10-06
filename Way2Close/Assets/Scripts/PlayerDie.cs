@@ -72,6 +72,11 @@ public class PlayerDie : MonoBehaviour {
         StopEnemies();
     }
 
+    public bool IsPlayerDead()
+    {
+        return isDead;
+    }
+
     void KillMe () {
 	    if(!isDead)
         {

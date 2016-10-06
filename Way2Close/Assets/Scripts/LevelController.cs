@@ -63,5 +63,10 @@ public abstract class LevelController : MonoBehaviour {
 
     protected abstract int GetCurrentLevelIndex();
 
+    protected void EndLevel()
+    {
+        gameController.GetComponent<LevelTimer>().EndLevel();
+    }
+
 
 }

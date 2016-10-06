@@ -92,26 +92,37 @@ public class LevelTimer : MonoBehaviour {
     // called when the player reached the end of the level successfully. NOT called on player death. This is called automatically by the LevelTimer if the level has a limited time, otherwise it needs to be called manually from the LevelController.
     public void EndLevel()
     {
-        levelEnded = true;
-        GetComponent<CountScore>().SendMessage("StopAddingScore");
-        GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
-        GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
-        timeLeft = 0.0F;    // prevent display of a slighty negative time at level end, like "-0.01 secsonds left"
-        GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");
-        GetComponent<LevelUIController>().SendMessage("SaveScores");
-        GetComponent<LevelManager>().SendMessage("UnlockNextLevelIfAppropriate");
-
         GameObject player = GameObject.Find("Player");
-        player.SendMessage("SetLevelEndedPlayerMode");
 
-        GameObject levelContollerHolder = GameObject.Find("LevelControllerHolder");
-        if(levelContollerHolder != null)
+        if( ! player.GetComponent<PlayerDie>().IsPlayerDead())
         {
-            levelContollerHolder.GetComponent<LevelController>().SendMessage("SetLevelEndedLevelControllerMode");
+
+            levelEnded = true;
+            GetComponent<CountScore>().SendMessage("StopAddingScore");
+            GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
+            GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
+            timeLeft = 0.0F;    // prevent display of a slighty negative time at level end, like "-0.01 secsonds left"
+            GetComponent<LevelUIController>().SendMessage("ShowLevelDonePanel");
+            GetComponent<LevelUIController>().SendMessage("SaveScores");
+            GetComponent<LevelManager>().SendMessage("UnlockNextLevelIfAppropriate");
+
+
+            player.SendMessage("SetLevelEndedPlayerMode");
+
+            GameObject levelContollerHolder = GameObject.Find("LevelControllerHolder");
+            if (levelContollerHolder != null)
+            {
+                levelContollerHolder.GetComponent<LevelController>().SendMessage("SetLevelEndedLevelControllerMode");
+            }
+            else
+            {
+                Debug.Log("No LevelControllerHolder found, could not send message to end level.");
+            }
         }
         else
         {
-            Debug.Log("No LevelControllerHolder found, could not send message to end level.");
+            Debug.Log("LevelTimer: Not ending level, player is dead.");
         }
+
     }
 }
