@@ -48,21 +48,26 @@ public class PlayerDie : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
         //Debug.Log("Collision involving player.");
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Obstacle")
         {
             if ( ! this.isInvincible)
             {
                 //Debug.Log("Player collided with enemy.");
-                KillMe();
-                StopEnemies();
-                gameController.GetComponent<CountScore>().SendMessage("StopAddingScore");
-                gameController.GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
-                gameController.GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
-                gameController.GetComponent<CountScore>().SendMessage("UpdateHighscoreText");
-                gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");
-                gameController.GetComponent<LevelUIController>().SendMessage("SaveScores");
+                KillPlayer();
             }
         }            
+    }
+
+    public void KillPlayer()
+    {
+        KillMe();
+        StopEnemies();
+        gameController.GetComponent<CountScore>().SendMessage("StopAddingScore");
+        gameController.GetComponent<SpawnEnemies>().SendMessage("StopSpawning");
+        gameController.GetComponent<LevelTimer>().SendMessage("StopUpdatingLevelTime");
+        gameController.GetComponent<CountScore>().SendMessage("UpdateHighscoreText");
+        gameController.GetComponent<LevelUIController>().SendMessage("ShowHighScorePanel");
+        gameController.GetComponent<LevelUIController>().SendMessage("SaveScores");
     }
 
     public void SetLevelEndedPlayerMode()

@@ -49,15 +49,11 @@ public class Level0Controller : LevelController {
             gameController.GetComponent<SpawnEnemies>().Spawn();
         }
     }
-
-    void StopSpawning()
-    {
-        CancelInvoke();
-    }
+    
 
     override protected void SetLevelEndedLevelControllerMode()
-    {
-        // nothing to do for Level_0
+    {        
+        StopSpawning();
     }
 
     override protected int GetCurrentLevelIndex()

@@ -36,7 +36,7 @@ public class Level2Controller : LevelController
 
     override protected void SetLevelEndedLevelControllerMode()
     {
-        CancelInvoke();
+        StopSpawning();
     }
 
     override protected int GetCurrentLevelIndex()
