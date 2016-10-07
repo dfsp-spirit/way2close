@@ -129,13 +129,60 @@ public class SpawnEnemies : MonoBehaviour {
         UpdateWaveText();
     }
 
+    public Vector3 GetSpacerX()
+    {
+        return new Vector3(getWidthOfCurrentEnemy(), 0.0F, 0.0F);
+    }
+
+    public Vector3 GetSpacerY()
+    {
+        return new Vector3(0.0F, getHeightOfCurrentEnemy(), 0.0F); ;
+    }
+
+    public float getWidthOfCurrentEnemy()
+    {
+        return 1.5F;    //TODO: set based on active enemy prefab
+    }
+
+    public float getHeightOfCurrentEnemy()
+    {
+        return 1.5F;    //TODO: set based on active enemy prefab
+    }
+
+    public float getDiagonalLengthOfCurrentEnemy()
+    {
+        return 1.0F;    //TODO: set based on active enemy prefab
+    }
 
     private void UpdateWaveText()
     {
         waveText.text = "Wave: " + currentWave.ToString();
     }
-    
 
-    
-    
+    public Vector3 GetShiftVectorHorizontal()
+    {
+        return new Vector3(getWidthOfCurrentEnemy(), 0.0F, 0.0F);
+    }
+
+    public Vector3 GetShiftVectorVerticalUp() {
+        return new Vector3(0.0F, getHeightOfCurrentEnemy(), 0.0F);
+    }
+
+    public Vector3 GetShiftVectorVerticalDown()
+    {
+        return new Vector3(0.0F, -getHeightOfCurrentEnemy(), 0.0F);
+    }
+
+    public Vector3 GetShiftVectorDiagonalUp()
+    {
+        return new Vector3(getDiagonalLengthOfCurrentEnemy(), getDiagonalLengthOfCurrentEnemy(), 0.0F);
+    }
+
+    public Vector3 GetShiftVectorDiagonalDown()
+    {
+        return new Vector3(getDiagonalLengthOfCurrentEnemy(), -getDiagonalLengthOfCurrentEnemy(), 0.0F);
+    }
+
+
+
 }

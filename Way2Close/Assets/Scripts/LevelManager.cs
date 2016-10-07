@@ -8,12 +8,13 @@ public class LevelManager : MonoBehaviour {
 
     public static string sceneName_Level_0 = "Level_0";
     public static string sceneName_Level_1 = "Level_1";
+    public static string sceneName_Level_2 = "Level_2";
 
     public static string sceneName_MainMenu = "MainMenu";
     public static string sceneName_Tutorial = "Tutorial";
 
-    public static List<string> levelFancyNames = new List<string>() { "Randomness", "Stairs" };
-    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1 };
+    public static List<string> levelFancyNames = new List<string>() { "Randomness", "Stairs", "Cave" };
+    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1, sceneName_Level_2 };
         
 
     public bool nextLevelExists()
@@ -73,10 +74,19 @@ public class LevelManager : MonoBehaviour {
         }        
     }
 
-    public static string GetLevelNameBySceneName(string sceneName)
+    public static string GetLevelFancyNameBySceneName(string sceneName)
     {
         int levelIndex = levelSceneNames.IndexOf(sceneName);
         if(levelIndex >= 0)
+        {
+            return levelFancyNames[levelIndex];
+        }
+        return null;
+    }
+
+    public static string GetLevelFancyNameByLevelIndex(int levelIndex)
+    {
+        if (levelIndex >= 0)
         {
             return levelFancyNames[levelIndex];
         }

@@ -24,7 +24,7 @@ public class Level0Controller : LevelController {
 
     void ShowWelcomeText()
     {
-        levelTextHeading.text = "Level 0";
+        levelTextHeading.text = "Level " + GetCurrentLevelIndex() + ": " + GetLevelFancyName();
         levelTextLine.text = "Get ready";
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
