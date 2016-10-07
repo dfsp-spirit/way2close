@@ -45,17 +45,39 @@ public class PolygonTester : MonoBehaviour
         filter.mesh = msh;
 
         // add a mesh collider, will work with 3D objects only
+        bool useAnyCollider = true;
         bool use3DCollider = false;
-        if (use3DCollider)
-        {
-            MeshCollider collider = gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
-            collider.convex = true;
-            collider.isTrigger = true;
-            collider.sharedMesh = filter.sharedMesh;
+        bool inCaseUse2DColliderTypeBox = false;
+        if (useAnyCollider) { 
+            if (use3DCollider)
+            {
+                Debug.Log("Using mesh 3D collider");
+                MeshCollider collider = gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
+                collider.convex = true;
+                collider.isTrigger = true;
+                collider.sharedMesh = filter.sharedMesh;
+            }
+            else
+            {   // use 2D collider
+                if(inCaseUse2DColliderTypeBox)
+                {
+                    Debug.Log("Using box 2D collider");
+                    BoxCollider2D collider = gameObject.AddComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+                }
+                else
+                {
+                    Debug.Log("Using polygon 2D collider");
+                    PolygonCollider2D collider = gameObject.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
+                    collider.pathCount = 1;
+                    collider.SetPath(0, vertices2D);
+                    //collider.CreatePrimitive(4);
+                }
+                
+            }
         }
         else
         {
-            BoxCollider2D collider = gameObject.AddComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+            Debug.Log("Not using any collider");
         }
 
         // move to position
