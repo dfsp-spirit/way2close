@@ -22,6 +22,7 @@ public class Level2Controller : LevelController
         gameController = GameObject.Find("GameController");
         Invoke("ShowWelcomeText", 1.0F);
         spawner = gameController.GetComponent<SpawnEnemies>();
+        spawner.SetCurrentWave(0);
     }
 
     override public float GetLevelDuration()
@@ -53,9 +54,32 @@ public class Level2Controller : LevelController
         ShowPanel();
         Invoke("HidePanel", showPanelDuration);
 
-        spawner.SetCurrentWave(0);
         spawner.SetUseRandomEnemyFromPrefabs();
 
-        //Invoke("SpawnWave0", showNextPanelInTime);
+        Invoke("SpawnWave0", showNextPanelInTime);
+    }
+
+    void SpawnWave0()
+    {
+        spawner.SetCurrentWave(0);
+
+        Debug.Log("Spawning obstacle.");
+        obstacleSpawner.ObstacleSpeed = 2.0F;
+
+        obstacleSpawner.SpawnPosition = new Vector3(5.0F, 0.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTrapez);
+
+        obstacleSpawner.SpawnPosition = new Vector3(5.0F, 2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTriangle);
+
+        obstacleSpawner.SpawnPosition = new Vector3(5.0F, -2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesRectangle);
+
+        Invoke("SpawnWave1", showNextPanelInTime);
+    }
+
+    void SpawnWave1()
+    {
+        spawner.SetCurrentWave(1);
     }
 }

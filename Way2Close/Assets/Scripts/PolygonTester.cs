@@ -2,6 +2,7 @@
 
 public class PolygonTester : MonoBehaviour
 {
+    // WARNING: This is a test only. It needs to be attached to a pre-created, empty GameObject to work.
     void Start()
     {
         // Create Vector2 vertices

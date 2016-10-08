@@ -122,6 +122,7 @@ public class PolygonSpawner : MonoBehaviour {
         }
     }
 
+    // try something like the following as a vertices2[] as argument: Vector2[] vertices2D = new Vector2[] { new Vector2(0,0), new Vector2(2,2), new Vector2(4,2), new Vector2(6,0) };
     public GameObject SpawnPolygon(string name, Vector2[] vertices2D)
     {
         Triangulator tr = new Triangulator(vertices2D);

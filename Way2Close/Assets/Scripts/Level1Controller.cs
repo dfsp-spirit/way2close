@@ -59,7 +59,9 @@ public class Level1Controller : LevelController {
 
     // spawn a diagonal line (to the upper right)
     void SpawnWave0()
-    {        
+    {
+        spawner.SetCurrentWave(0);
+
         firstPos = new Vector3(WORLD_X_RIGHT_BORDER, -5.0F, 0.0F);
         spawner.SpawnLine(firstPos, 8, spawner.GetShiftVectorDiagonalUp());        
 

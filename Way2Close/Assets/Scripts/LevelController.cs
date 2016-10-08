@@ -18,11 +18,18 @@ public abstract class LevelController : MonoBehaviour {
     public static float showNextPanelInTime = 8.0F;
     public static float uiFadeDuration = 1.0F;
 
+    protected ObstacleSpawner obstacleSpawner;
+
     protected virtual void Start()
     {
         gameController = GameObject.Find("GameController");
         texts = levelPanel.GetComponentsInChildren<Text>();
         levelPanel.SetActive(false);
+        obstacleSpawner = new ObstacleSpawner();
+        obstacleSpawner.SetMaterialByResourceName("ObstacleMaterialRed");
+        obstacleSpawner.ResultingGameObjectColliderType = PolygonSpawner.ColliderType.Polygon2D;
+        obstacleSpawner.ResultingGameObjectSortingLayerName = "Front";
+        obstacleSpawner.ResultingGameObjectTag = "Obstacle";
     }
 
     protected void ShowPanel()
