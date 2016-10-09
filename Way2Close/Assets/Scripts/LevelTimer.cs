@@ -30,7 +30,7 @@ public class LevelTimer : MonoBehaviour {
         timeLeft = levelDuration;
         levelEnded = false;
 
-        LeaderBoard.Report();
+        //LeaderBoard.Report();
     }
 	
 	
