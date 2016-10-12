@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PolygonSpawner : MonoBehaviour {
+public class PolygonSpawner {
 
     string resultingGameObjectTag;   // e.g., "Obstacle"
     string resultingGameObjectSortingLayerName = null;  // e.g., "Front"

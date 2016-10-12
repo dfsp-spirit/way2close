@@ -4,27 +4,27 @@ using System.Collections;
 public class ObstacleSpawner : PolygonSpawner {
 
     float obstacleSpeed = 2.0F;
-    float upperBoarderYPos = 4.0F;
-    float lowerBoarderYPos = -4.0F;
+    float upperBoarderYPos = 4.15F;
+    float lowerBoarderYPos = -4.15F;
 
     public static Vector2[] verticesTrapez = new Vector2[] {
-            new Vector2(0, 0),
-            new Vector2(2, 2),
-            new Vector2(4, 2),
-            new Vector2(6, 0)
+            new Vector2(0.0F, 0.0F),
+            new Vector2(2.0F, 2.0F),
+            new Vector2(4.0F, 2.0F),
+            new Vector2(6.0F, 0.0F)
         };
 
     public static Vector2[] verticesRectangle = new Vector2[] {
-            new Vector2(0, 0),
-            new Vector2(0, 1),
-            new Vector2(1, 1),
-            new Vector2(1, 0)
+            new Vector2(0.0F, 0.0F),
+            new Vector2(0.0F, 1.0F),
+            new Vector2(1.0F, 1.0F),
+            new Vector2(1.0F, 0.0F)
         };
 
     public static Vector2[] verticesTriangle = new Vector2[] {
-            new Vector2(0, 0),
-            new Vector2(1, 1),
-            new Vector2(1, 0),
+            new Vector2(0.0F, 0.0F),
+            new Vector2(1.0F, 1.0F),
+            new Vector2(1.0F, 0.0F),
         };
 
     public float ObstacleSpeed
@@ -82,8 +82,23 @@ public class ObstacleSpawner : PolygonSpawner {
         Vector2[] vertices2D = GetBottomPolyVerticesFromTo(upperLeft, upperRight);
         GameObject go = SpawnObstaclePolygon(name, vertices2D);
         Debug.Log("Spawned GameObject " + go.name + ", before alignment call. Position is " + go.transform.position.ToString() + ", vertices are " + v2ArrayToString(vertices2D) + ".");
-        AlignGameObjectLowerBorderToYPosition(go, this.lowerBoarderYPos);
+        //AlignGameObjectLowerBorderToYPosition(go, this.lowerBoarderYPos);
         return go;
+    }
+
+    public GameObject SpawnTopBorderObstacleParallelToPolyAtBottom(string name, Vector2 upperLeftOfBottomObstacle, Vector2 upperRightOfBottomObstacle, float verticalSpaceInBetween)
+    {
+        Vector2 lowerLeft = new Vector2(upperLeftOfBottomObstacle.x, upperLeftOfBottomObstacle.y + verticalSpaceInBetween);
+        Vector2 lowerRight = new Vector2(upperRightOfBottomObstacle.x, upperRightOfBottomObstacle.y + verticalSpaceInBetween);
+        return SpawnPolyAtBorderTopFromTo(name, lowerLeft, lowerRight);
+    }
+
+    // give it the 2 points defining the upper edge of the cave floor
+    public GameObject[] SpawnTunnelSegmentDefinedByBottom(Vector2 upperLeft, Vector2 upperRight, float tunnelHeight)
+    {
+        GameObject tunnelFloor = SpawnPolyAtBottomBorderFromTo("TunnelFloor", upperLeft, upperRight);
+        GameObject tunnelCeiling = SpawnTopBorderObstacleParallelToPolyAtBottom("TunnelCeiling", upperLeft, upperRight, tunnelHeight);
+        return new GameObject[] { tunnelFloor, tunnelCeiling };
     }
 
     private string v2ArrayToString(Vector2[] vertices2D)
@@ -102,11 +117,7 @@ public class ObstacleSpawner : PolygonSpawner {
         float currentYMax = go.GetComponent<Renderer>().bounds.max.y;
         float difference = targetYPos - currentYMin;
 
-        //DEBUG
-        if(difference < 0.1)
-        {
-            difference = -0.15F;
-        }
+        
 
         Vector3 currentPosition = go.transform.position;
         Vector3 targetPosition = new Vector3(currentPosition.x, currentPosition.y + difference, currentPosition.z);
@@ -139,7 +150,7 @@ public class ObstacleSpawner : PolygonSpawner {
 
     public GameObject SpawnPolyAtBorderTopFromTo(string name, Vector2 lowerLeft, Vector2 lowerRight)
     {
-        Vector2[] vertices2D = GetBottomPolyVerticesFromTo(lowerLeft, lowerRight);
+        Vector2[] vertices2D = GetTopPolyVerticesFromTo(lowerLeft, lowerRight);
         return SpawnObstaclePolygon(name, vertices2D);
     }
 

@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="800"
-   height="200"
+   width="801.11163"
+   height="201.11169"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
@@ -28,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="158.77659"
-     inkscape:cy="228.21215"
+     inkscape:cx="0.23340344"
+     inkscape:cy="230.28326"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -41,7 +41,7 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="2.7755576e-017" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -58,13 +58,16 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-58.63961,-398.94992)">
+     transform="translate(-59.598999,-399.90933)">
     <rect
-       style="fill:#ff6464;fill-opacity:0.82539685;stroke:#ff0000;stroke-width:10.00000095;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0;stroke-dasharray:none;stroke-dashoffset:0"
+       style="fill:#ff6464;fill-opacity:0.82539685;stroke:none"
        id="rect2985"
-       width="790"
-       height="190"
-       x="63.63961"
-       y="403.94992" />
+       width="801.11163"
+       height="201.11169"
+       x="59.598999"
+       y="399.90933"
+       inkscape:export-filename="E:\ts_home\develop\way2close\design\assets\export\border_straight_2280x570.png"
+       inkscape:export-xdpi="255.97716"
+       inkscape:export-ydpi="255.97716" />
   </g>
 </svg>

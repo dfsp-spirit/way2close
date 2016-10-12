@@ -5,13 +5,22 @@ using UnityEngine.UI;
 public class DebugStuff : MonoBehaviour {
 
     public Text text;
+    bool debugOn = true;
+
+    void SetDebug(bool state)
+    {
+        debugOn = state;
+    }
 	
-    //void Update()
-    //{
-    //    ShowMousePosition();
-    //}
+    void Update()
+    {
+        if (debugOn)
+        {
+            ShowMousePosition();
+        }
+    }
 
 	void ShowMousePosition() {
-        text.text = "s:" + Input.mousePosition + " / s2v:" + Camera.main.ScreenToViewportPoint(Input.mousePosition) + " / w2v:" + Camera.main.WorldToViewportPoint(Input.mousePosition);	
-	}
+        text.text = "scr:" + Input.mousePosition.ToString("n3") + " / viewp:" + Camera.main.ScreenToViewportPoint(Input.mousePosition).ToString("n3") + " / wrld:" + Camera.main.ScreenToWorldPoint(Input.mousePosition).ToString("n3");
+    }
 }

@@ -100,5 +100,18 @@ public class Level2Controller : LevelController
         obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(0.0F, 0.0F), new Vector2(2.0F, 2.0F));
         obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(2.0F, 2.0F), new Vector2(4.0F, 2.0F));
         obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(4.0F, 2.0F), new Vector2(7.0F, 1.0F));
+        obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(7.0F, 1.0F), new Vector2(10.0F, 0.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(10.0F, 0.0F, 0.0F);
+        obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(0.0F, 0.0F), new Vector2(2.0F, 2.0F));
+        obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(2.0F, 2.0F), new Vector2(4.0F, 2.0F));
+        obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(4.0F, 2.0F), new Vector2(7.0F, 1.0F));
+        obstacleSpawner.SpawnPolyAtBottomBorderFromTo("Obstacle", new Vector2(7.0F, 1.0F), new Vector2(10.0F, 0.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(20.0F, 0.0F, 0.0F);
+        float currentTunnelSegmentHeight = 2.0F;
+        obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(0.0F, 0.0F), new Vector2(2.0F, 2.0F), currentTunnelSegmentHeight);
+        obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(2.0F, 2.0F), new Vector2(6.0F, 2.0F), currentTunnelSegmentHeight);
+        obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(6.0F, 2.0F), new Vector2(10.0F, -2.0F), currentTunnelSegmentHeight);
     }
 }
