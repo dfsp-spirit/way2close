@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ObstacleSpawner : PolygonSpawner {
 
@@ -90,15 +91,74 @@ public class ObstacleSpawner : PolygonSpawner {
     {
         Vector2 lowerLeft = new Vector2(upperLeftOfBottomObstacle.x, upperLeftOfBottomObstacle.y + verticalSpaceInBetween);
         Vector2 lowerRight = new Vector2(upperRightOfBottomObstacle.x, upperRightOfBottomObstacle.y + verticalSpaceInBetween);
-        return SpawnPolyAtBorderTopFromTo(name, lowerLeft, lowerRight);
+        return SpawnPolyAtTopBorderFromTo(name, lowerLeft, lowerRight);
     }
 
-    // give it the 2 points defining the upper edge of the cave floor
+    // give it the 2 points defining the upper edge of the cave floor and the height of the tunnel the player can fly through
     public GameObject[] SpawnTunnelSegmentDefinedByBottom(Vector2 upperLeft, Vector2 upperRight, float tunnelHeight)
     {
         GameObject tunnelFloor = SpawnPolyAtBottomBorderFromTo("TunnelFloor", upperLeft, upperRight);
         GameObject tunnelCeiling = SpawnTopBorderObstacleParallelToPolyAtBottom("TunnelCeiling", upperLeft, upperRight, tunnelHeight);
         return new GameObject[] { tunnelFloor, tunnelCeiling };
+    }
+
+    // adapter piece to put between tunnel pieces with different tunnel heights
+    public GameObject[] SpawnTunnelHeightAdapterDefinedByBottomFromTo(Vector2 oldFloorEndPoint, float oldTunnelHeight, Vector2 nextFloorStartPoint, float newTunnelHeight)
+    {
+        Vector2 oldCeilingEndPoint = new Vector2(oldFloorEndPoint.x, (oldFloorEndPoint.y + oldTunnelHeight));
+        Vector2 newCeilingStartPoint = new Vector2(nextFloorStartPoint.x, (nextFloorStartPoint.y + newTunnelHeight));
+
+        GameObject tunnelFloor = SpawnPolyAtBottomBorderFromTo("TunnelFloor", oldFloorEndPoint, nextFloorStartPoint);        
+        GameObject tunnelCeiling = SpawnPolyAtTopBorderFromTo("TunnelCeiling", oldCeilingEndPoint, newCeilingStartPoint);
+
+        return new GameObject[] { tunnelFloor, tunnelCeiling };
+    }
+
+    // spawn a tunnel segment consisting of 3 parts: horizontal start piece of given length, diagonal part, horizontal end piece of given length.
+    // if the start and end height is different, the middle part will adapt between them (i.e., the horizontal end segment already has the new height)
+    // you can set the length of the horizontal start and/or end segments to 0 if you do not want them
+    public GameObject[] SpawnComplexTunnelPart(Vector2 oldFloorEndPointBottom, float oldTunnelHeight, float lengthOfHorizontalStartSegment, Vector2 nextFloorStartPointBottom, float newTunnelHeight, float lengthOfHorizontalEndSegment)
+    {
+        List<GameObject> parts = new List<GameObject>();
+
+        Vector2 horizontalStartSegmentEndPointBottom = new Vector2(oldFloorEndPointBottom.x + lengthOfHorizontalStartSegment, oldFloorEndPointBottom.y);
+        Vector2 horizontalStartSegmentEndPointTop = new Vector2(horizontalStartSegmentEndPointBottom.x, horizontalStartSegmentEndPointBottom.y + oldTunnelHeight);
+        // spawn horizontal start segment
+        if (lengthOfHorizontalStartSegment >= 0.01F)
+        {
+            GameObject[] floorAndCeiling = SpawnTunnelSegmentDefinedByBottom(oldFloorEndPointBottom, horizontalStartSegmentEndPointBottom, oldTunnelHeight);
+            foreach(GameObject part in floorAndCeiling)
+            {
+                parts.Add(part);
+            }
+        }
+
+        // spawn potentially diagonal piece which may also need to adjust the height (i.e., floor and ceiling may NOT be parallel)
+        Vector2 horizontalEndSegmentStartPointBottom = new Vector2(nextFloorStartPointBottom.x - lengthOfHorizontalEndSegment, nextFloorStartPointBottom.y);
+        Vector2 horizontalEndSegmentStartPointTop = new Vector2(horizontalEndSegmentStartPointBottom.x, horizontalEndSegmentStartPointBottom.y + newTunnelHeight);
+        Vector2 nextFloorStartPointTop = new Vector2(nextFloorStartPointBottom.x, nextFloorStartPointBottom.y + newTunnelHeight);
+
+        Vector2 diagonalSegmentStartPointBottom = horizontalStartSegmentEndPointBottom;
+        Vector2 diagonalSegmentEndPointBottom = horizontalEndSegmentStartPointBottom;
+        GameObject diagonalFloor = SpawnPolyAtBottomBorderFromTo("TunnelFloor", diagonalSegmentStartPointBottom, diagonalSegmentEndPointBottom);
+        parts.Add(diagonalFloor);
+
+        Vector2 diagonalSegmentStartPointTop = horizontalStartSegmentEndPointTop;
+        Vector2 diagonalSegmentEndPointTop = horizontalEndSegmentStartPointTop;
+        GameObject diagonalCeiling = SpawnPolyAtTopBorderFromTo("TunnelCeiling", diagonalSegmentStartPointTop, diagonalSegmentEndPointTop);
+        parts.Add(diagonalCeiling);
+
+        // spawn horizontal end segment with new height
+        if (lengthOfHorizontalEndSegment >= 0.01F)
+        {
+            GameObject[] floorAndCeiling = SpawnTunnelSegmentDefinedByBottom(horizontalEndSegmentStartPointBottom, nextFloorStartPointBottom, newTunnelHeight);
+            foreach (GameObject part in floorAndCeiling)
+            {
+                parts.Add(part);
+            }
+        }
+
+        return parts.ToArray();
     }
 
     private string v2ArrayToString(Vector2[] vertices2D)
@@ -148,7 +208,7 @@ public class ObstacleSpawner : PolygonSpawner {
         return new Vector2[] { new Vector2(upperLeft.x, this.lowerBoarderYPos), upperLeft, upperRight, new Vector2(upperRight.x, this.lowerBoarderYPos) };
     }
 
-    public GameObject SpawnPolyAtBorderTopFromTo(string name, Vector2 lowerLeft, Vector2 lowerRight)
+    public GameObject SpawnPolyAtTopBorderFromTo(string name, Vector2 lowerLeft, Vector2 lowerRight)
     {
         Vector2[] vertices2D = GetTopPolyVerticesFromTo(lowerLeft, lowerRight);
         return SpawnObstaclePolygon(name, vertices2D);
@@ -169,5 +229,43 @@ public class ObstacleSpawner : PolygonSpawner {
             Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon invalid. The two points must not be both directly on the upper border.");
         }
         return new Vector2[] { new Vector2(lowerLeft.x, this.upperBoarderYPos), lowerLeft, lowerRight, new Vector2(lowerRight.x, this.upperBoarderYPos) };
+    }
+
+    public GameObject SpawnTunnelStartRampBottom(float startPosX, Vector2 endPoint)
+    {
+        return SpawnPolyAtBottomBorderFromTo("StartRampBottom", new Vector2(startPosX, lowerBoarderYPos), endPoint);
+    }
+
+    public GameObject SpawnTunnelStartRampTop(float startPosX, Vector2 endPoint)
+    {
+        return SpawnPolyAtTopBorderFromTo("StartRampTop", new Vector2(startPosX, upperBoarderYPos), endPoint);
+    }
+
+    public GameObject[] SpawnBothTunnelStartRampsForTunnelDefinedByBottom(float bothRampsStartPosX, Vector2 nextTunnelStartPointBottom, float tunnelHeight)
+    {
+        Vector2 nextTunnelStartPointTop = new Vector2(nextTunnelStartPointBottom.x, nextTunnelStartPointBottom.y + tunnelHeight);
+        GameObject startRampTop = SpawnTunnelStartRampTop(bothRampsStartPosX, nextTunnelStartPointTop);
+
+        GameObject startRampBottom = SpawnTunnelStartRampBottom(bothRampsStartPosX, nextTunnelStartPointBottom);
+        return new GameObject[] { startRampBottom, startRampTop };
+    }
+
+    public GameObject SpawnTunnelEndRampBottom(Vector2 startPoint, float endPosX)
+    {
+        return SpawnPolyAtBottomBorderFromTo("EndRampBottom", startPoint, new Vector2(endPosX, lowerBoarderYPos));
+    }
+
+    public GameObject SpawnTunnelEndRampTop(Vector2 startPoint, float endPosX)
+    {
+        return SpawnPolyAtTopBorderFromTo("EndRampTop", startPoint, new Vector2(endPosX, upperBoarderYPos));
+    }
+
+    public GameObject[] SpawnBothTunnelEndRampsForTunnelDefinedByBottom(Vector2 lastTunnelEndPointBottom, float bothRampsEndPosX, float tunnelHeight)
+    {
+        Vector2 lastTunnelEndPointTop = new Vector2(lastTunnelEndPointBottom.x, lastTunnelEndPointBottom.y + tunnelHeight);
+        GameObject endRampTop = SpawnTunnelEndRampTop(lastTunnelEndPointTop, bothRampsEndPosX);
+
+        GameObject endRampBottom = SpawnTunnelEndRampBottom(lastTunnelEndPointBottom, bothRampsEndPosX);
+        return new GameObject[] { endRampBottom, endRampTop };
     }
 }
