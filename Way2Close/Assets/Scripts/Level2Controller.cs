@@ -71,7 +71,7 @@ public class Level2Controller : LevelController
 
         spawner.SetUseRandomEnemyFromPrefabs();
 
-        Invoke("SpawnWave1", showNextPanelInTime);
+        Invoke("SpawnWave2", showNextPanelInTime);
     }
 
     void SpawnWave0()
@@ -113,5 +113,32 @@ public class Level2Controller : LevelController
         obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(0.0F, 0.0F), new Vector2(2.0F, 2.0F), currentTunnelSegmentHeight);
         obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(2.0F, 2.0F), new Vector2(6.0F, 2.0F), currentTunnelSegmentHeight);
         obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(6.0F, 2.0F), new Vector2(10.0F, -2.0F), currentTunnelSegmentHeight);
+
+        Invoke("SpawnWave2", showNextPanelInTime * 3.0F);
+    }
+
+    void SpawnWave2()
+    {
+        spawner.SetCurrentWave(2);
+        obstacleSpawner.SpawnPosition = new Vector3(0.0F, 0.0F, 0.0F);
+
+        float rampStartX = 0.0F;
+        Vector2 nextTunnelStartPointBottom = new Vector2(2.0F, -2.0F);
+        float currentHeight = 2.0F;
+        float nextHeight;
+        obstacleSpawner.SpawnBothTunnelStartRampsForTunnelDefinedByBottom(rampStartX, nextTunnelStartPointBottom, currentHeight);
+
+        Vector2 nextTunnelEndPointBottom = new Vector2(3.0F, -1.0F);
+        obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(nextTunnelStartPointBottom, nextTunnelEndPointBottom, currentHeight);
+
+        Vector2 lastTunnelEndPointBottom = nextTunnelEndPointBottom;
+        nextTunnelEndPointBottom = new Vector2(8.0F, 1.0F);
+        nextHeight = 1.5F;
+        float startSpacerLength = 1.0F;
+        float endSpacerLength = 1.0F;
+        obstacleSpawner.SpawnComplexTunnelPart(lastTunnelEndPointBottom, currentHeight, startSpacerLength, nextTunnelEndPointBottom, nextHeight, endSpacerLength);
+        currentHeight = nextHeight;
+        obstacleSpawner.SpawnBothTunnelEndRampsForTunnelDefinedByBottom(nextTunnelEndPointBottom, 10.0F, currentHeight);
+
     }
 }

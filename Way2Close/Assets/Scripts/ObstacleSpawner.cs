@@ -7,6 +7,7 @@ public class ObstacleSpawner : PolygonSpawner {
     float obstacleSpeed = 2.0F;
     float upperBoarderYPos = 4.15F;
     float lowerBoarderYPos = -4.15F;
+    bool warnIfPolyOutofGameArea = true;
 
     public static Vector2[] verticesTrapez = new Vector2[] {
             new Vector2(0.0F, 0.0F),
@@ -80,7 +81,7 @@ public class ObstacleSpawner : PolygonSpawner {
     // these points down to the lower border. The points upperLeft and upperRight must NOT be below the lower border, and the first one must be left of the right one.
     public GameObject SpawnPolyAtBottomBorderFromTo(string name, Vector2 upperLeft, Vector2 upperRight)
     {
-        Vector2[] vertices2D = GetBottomPolyVerticesFromTo(upperLeft, upperRight);
+        Vector2[] vertices2D = GetBottomPolyVerticesFromTo(upperLeft, upperRight, name);
         GameObject go = SpawnObstaclePolygon(name, vertices2D);
         Debug.Log("Spawned GameObject " + go.name + ", before alignment call. Position is " + go.transform.position.ToString() + ", vertices are " + v2ArrayToString(vertices2D) + ".");
         //AlignGameObjectLowerBorderToYPosition(go, this.lowerBoarderYPos);
@@ -97,8 +98,25 @@ public class ObstacleSpawner : PolygonSpawner {
     // give it the 2 points defining the upper edge of the cave floor and the height of the tunnel the player can fly through
     public GameObject[] SpawnTunnelSegmentDefinedByBottom(Vector2 upperLeft, Vector2 upperRight, float tunnelHeight)
     {
-        GameObject tunnelFloor = SpawnPolyAtBottomBorderFromTo("TunnelFloor", upperLeft, upperRight);
-        GameObject tunnelCeiling = SpawnTopBorderObstacleParallelToPolyAtBottom("TunnelCeiling", upperLeft, upperRight, tunnelHeight);
+        string tunnelFloorName = "TunnelFloor";
+        string tunnelCeilingName = "TunnelCeiling";
+        // check only
+        if (warnIfPolyOutofGameArea)
+        {
+            if(upperLeft.y < this.lowerBoarderYPos || upperRight.y < this.lowerBoarderYPos)
+            {
+                Debug.Log("SpawnTunnelSegmentDefinedByBottom: WARNING: Tunnel segment " + tunnelFloorName + " will be below lower border.");
+            }
+
+            if (upperLeft.y + tunnelHeight > this.upperBoarderYPos || upperRight.y + tunnelHeight > this.upperBoarderYPos)
+            {
+                Debug.Log("SpawnTunnelSegmentDefinedByBottom: WARNING: Tunnel segment " + tunnelCeilingName + " will be above upper border.");
+            }
+        }
+        
+        // go
+        GameObject tunnelFloor = SpawnPolyAtBottomBorderFromTo(tunnelFloorName, upperLeft, upperRight);
+        GameObject tunnelCeiling = SpawnTopBorderObstacleParallelToPolyAtBottom(tunnelCeilingName, upperLeft, upperRight, tunnelHeight);
         return new GameObject[] { tunnelFloor, tunnelCeiling };
     }
 
@@ -191,42 +209,42 @@ public class ObstacleSpawner : PolygonSpawner {
         Debug.Log("AlignGameObjectLowerBorderToYPosition: After move. New y min pos is " + afterYMin.ToString("n3") + ", y max is " + afterYMax.ToString("n3") + ".");
     }
 
-    private Vector2[] GetBottomPolyVerticesFromTo(Vector2 upperLeft, Vector2 upperRight)
+    private Vector2[] GetBottomPolyVerticesFromTo(Vector2 upperLeft, Vector2 upperRight, string tag = "")
     {
         if(upperLeft.x >= upperRight.x)
         {
-            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon invalid. The left vertex is NOT left of the right one.");
+            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The left vertex is NOT left of the right one.");
         }
         if (upperLeft.y < this.lowerBoarderYPos || upperRight.y < this.lowerBoarderYPos)
         {
-            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon invalid. The two points must not be below the lower border.");
+            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The two points must not be below the lower border.");
         }
         if (upperLeft.y == this.lowerBoarderYPos && upperRight.y == this.lowerBoarderYPos)
         {
-            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon invalid. The two points must not be both directly on the lower border.");
+            Debug.Log("GetBottomPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The two points must not be both directly on the lower border.");
         }
         return new Vector2[] { new Vector2(upperLeft.x, this.lowerBoarderYPos), upperLeft, upperRight, new Vector2(upperRight.x, this.lowerBoarderYPos) };
     }
 
     public GameObject SpawnPolyAtTopBorderFromTo(string name, Vector2 lowerLeft, Vector2 lowerRight)
     {
-        Vector2[] vertices2D = GetTopPolyVerticesFromTo(lowerLeft, lowerRight);
+        Vector2[] vertices2D = GetTopPolyVerticesFromTo(lowerLeft, lowerRight, name);
         return SpawnObstaclePolygon(name, vertices2D);
     }
 
-    private Vector2[] GetTopPolyVerticesFromTo(Vector2 lowerLeft, Vector2 lowerRight)
+    private Vector2[] GetTopPolyVerticesFromTo(Vector2 lowerLeft, Vector2 lowerRight, string tag = "")
     {
         if (lowerLeft.x >= lowerRight.x)
         {
-            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon invalid. The left vertex is NOT left of the right one.");
+            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The left vertex is NOT left of the right one.");
         }
         if (lowerLeft.y > this.upperBoarderYPos || lowerRight.y > this.upperBoarderYPos)
         {
-            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon invalid. The two points must not be above the upper border.");
+            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The two points must not be above the upper border.");
         }
         if (lowerLeft.y == this.upperBoarderYPos && lowerRight.y == this.upperBoarderYPos)
         {
-            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon invalid. The two points must not be both directly on the upper border.");
+            Debug.Log("GetTopPolyVerticesFromTo: ERROR: Polygon " + tag + " invalid. The two points must not be both directly on the upper border.");
         }
         return new Vector2[] { new Vector2(lowerLeft.x, this.upperBoarderYPos), lowerLeft, lowerRight, new Vector2(lowerRight.x, this.upperBoarderYPos) };
     }
@@ -243,6 +261,10 @@ public class ObstacleSpawner : PolygonSpawner {
 
     public GameObject[] SpawnBothTunnelStartRampsForTunnelDefinedByBottom(float bothRampsStartPosX, Vector2 nextTunnelStartPointBottom, float tunnelHeight)
     {
+        if(bothRampsStartPosX >= nextTunnelStartPointBottom.x)
+        {
+            Debug.Log("SpawnBothTunnelStartRampsForTunnelDefinedByBottom: Ramp end point must not be left of start point.");
+        }
         Vector2 nextTunnelStartPointTop = new Vector2(nextTunnelStartPointBottom.x, nextTunnelStartPointBottom.y + tunnelHeight);
         GameObject startRampTop = SpawnTunnelStartRampTop(bothRampsStartPosX, nextTunnelStartPointTop);
 
@@ -252,16 +274,36 @@ public class ObstacleSpawner : PolygonSpawner {
 
     public GameObject SpawnTunnelEndRampBottom(Vector2 startPoint, float endPosX)
     {
-        return SpawnPolyAtBottomBorderFromTo("EndRampBottom", startPoint, new Vector2(endPosX, lowerBoarderYPos));
+        if(startPoint.x >= endPosX)
+        {
+            Debug.Log("SpawnTunnelEndRampBottom: Start point of end ramp x must not be right of end point.");
+        }
+        if(startPoint.y < this.lowerBoarderYPos)
+        {
+            Debug.Log("SpawnTunnelEndRampBottom: Start point of end ramp y must not be below lower border.");
+        }
+        return SpawnPolyAtBottomBorderFromTo("EndRampBottom", startPoint, new Vector2(endPosX, this.lowerBoarderYPos));
     }
 
     public GameObject SpawnTunnelEndRampTop(Vector2 startPoint, float endPosX)
     {
-        return SpawnPolyAtTopBorderFromTo("EndRampTop", startPoint, new Vector2(endPosX, upperBoarderYPos));
+        if (startPoint.x >= endPosX)
+        {
+            Debug.Log("SpawnTunnelEndRampTop: Start point of end ramp x must not be right of end point.");
+        }
+        if (startPoint.y > this.upperBoarderYPos)
+        {
+            Debug.Log("SpawnTunnelEndRampTop: Start point of end ramp y must not be above upper border.");
+        }
+        return SpawnPolyAtTopBorderFromTo("EndRampTop", startPoint, new Vector2(endPosX, this.upperBoarderYPos));
     }
 
     public GameObject[] SpawnBothTunnelEndRampsForTunnelDefinedByBottom(Vector2 lastTunnelEndPointBottom, float bothRampsEndPosX, float tunnelHeight)
     {
+        if(lastTunnelEndPointBottom.x >= bothRampsEndPosX)
+        {
+            Debug.Log("SpawnBothTunnelEndRampsForTunnelDefinedByBottom: Ramp start point must not be left of end point.");
+        }
         Vector2 lastTunnelEndPointTop = new Vector2(lastTunnelEndPointBottom.x, lastTunnelEndPointBottom.y + tunnelHeight);
         GameObject endRampTop = SpawnTunnelEndRampTop(lastTunnelEndPointTop, bothRampsEndPosX);
 
