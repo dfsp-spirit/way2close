@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Level0Controller : LevelController {
+public class Level3Controller : LevelController
+{
 
-    private int numInitialEnemies = 6;
+    private int numInitialEnemies = 10;
     private int numEnemiesAddedPerWave = 2;
-    private int maxWave = 5;
+    private int maxWave = 8;
     GameObject player;
     SpawnEnemies spawner;
 
-    protected override void Start () {
+    protected override void Start()
+    {
         base.Start();
         player = GameObject.Find("Player");
         spawner = gameController.GetComponent<SpawnEnemies>();
@@ -19,7 +21,7 @@ public class Level0Controller : LevelController {
 
     override public float GetLevelDuration()
     {
-        return 70.0F;
+        return 100.0F;
     }
 
     override public bool GetLevelHasFixedDuration()
@@ -61,10 +63,10 @@ public class Level0Controller : LevelController {
             }
         }
     }
-    
+
 
     override protected void SetLevelEndedLevelControllerMode()
-    {        
+    {
         StopSpawning();
     }
 

@@ -41,6 +41,18 @@ public class MainMenuController : MonoBehaviour {
         SceneManager.LoadScene(LevelManager.sceneName_Level_1);
     }
 
+    public void ClickTrainingLevel2()
+    {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_TRAINING);
+        SceneManager.LoadScene(LevelManager.sceneName_Level_2);
+    }
+
+    public void ClickTrainingLevel3()
+    {
+        LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_TRAINING);
+        SceneManager.LoadScene(LevelManager.sceneName_Level_3);
+    }
+
     public void ClickExit () {
         Application.Quit();
     }

@@ -9,12 +9,13 @@ public class LevelManager : MonoBehaviour {
     public static string sceneName_Level_0 = "Level_0";
     public static string sceneName_Level_1 = "Level_1";
     public static string sceneName_Level_2 = "Level_2";
+    public static string sceneName_Level_3 = "Level_3";
 
     public static string sceneName_MainMenu = "MainMenu";
     public static string sceneName_Tutorial = "Tutorial";
 
-    public static List<string> levelFancyNames = new List<string>() { "Randomness", "Stairs", "Cave" };
-    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1, sceneName_Level_2 };
+    public static List<string> levelFancyNames = new List<string>() { "Randomness I", "Patterns", "The Cave", "Randomness II" };
+    public static List<string> levelSceneNames = new List<string>() { sceneName_Level_0, sceneName_Level_1, sceneName_Level_2, sceneName_Level_3 };
         
 
     public bool nextLevelExists()
