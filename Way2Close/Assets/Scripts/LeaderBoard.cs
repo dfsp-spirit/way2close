@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class LeaderBoard : MonoBehaviour {
 
 
 
     private static string highScoreTotalEverKey = "Highscore";
+    private static string highScoreTotalEverDateStringKey = "HighscoreDate";
     private static string totalScoreThisGameKey = "ScoreThisGame";
     private static string gameModeThisGameKey = "GameMode";
 
@@ -13,6 +15,11 @@ public class LeaderBoard : MonoBehaviour {
     public static string GAMEMODE_GAME = "game";
     public static string GAMEMODE_TUTORIAL = "tutorial";
     public static string GAMEMODE_NONE_YET = "none";    // in menu
+
+    public static string GetOurDateStringFormat(DateTime dt)
+    {
+        return String.Format("{0:u}", dt);
+    }
 
     public static float GetScoreThisGame()
     {
@@ -87,12 +94,24 @@ public class LeaderBoard : MonoBehaviour {
     {        
         if (PlayerPrefs.HasKey(LeaderBoard.highScoreTotalEverKey))
         {
-            return PlayerPrefs.GetFloat(highScoreTotalEverKey);
+            return PlayerPrefs.GetFloat(LeaderBoard.highScoreTotalEverKey);
         }
         else
         {
             return 0.0F;
         }        
+    }
+
+    public static string GetGlobalHighscoreDateString()
+    {
+        if (PlayerPrefs.HasKey(LeaderBoard.highScoreTotalEverDateStringKey))
+        {
+            return PlayerPrefs.GetString(LeaderBoard.highScoreTotalEverDateStringKey);
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public static float GetHighscoreForLevelBySceneName(string sceneName)
@@ -108,17 +127,38 @@ public class LeaderBoard : MonoBehaviour {
         }
     }
 
-    public static void SetGlobalHighscore(float score)
+    public static string GetHighscoreDateStringForLevelBySceneName(string sceneName)
     {
-        string key = LeaderBoard.highScoreTotalEverKey;
-        PlayerPrefs.SetFloat(key, score);
+        string key = GetHighscoreDateKeyNameForScene(sceneName);
+        if (PlayerPrefs.HasKey(key))
+        {
+            return PlayerPrefs.GetString(key);
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    public static void SetGlobalHighscore(float score, DateTime dateTime)
+    {
+        string scoreKey = LeaderBoard.highScoreTotalEverKey;
+        PlayerPrefs.SetFloat(scoreKey, score);
+
+        string dateKey = LeaderBoard.highScoreTotalEverDateStringKey;
+        PlayerPrefs.SetString(dateKey, LeaderBoard.GetOurDateStringFormat(dateTime));
+
         PlayerPrefs.Save();
     }
 
-    public static void SetHighscoreForLevelBySceneName(string sceneName, float score)
+    public static void SetHighscoreForLevelBySceneName(string sceneName, float score, DateTime dateTime)
     {
         string key = GetHighscoreKeyNameForScene(sceneName);
         PlayerPrefs.SetFloat(key, score);
+
+        string dateKey = GetHighscoreDateKeyNameForScene(sceneName);
+        PlayerPrefs.SetString(dateKey, LeaderBoard.GetOurDateStringFormat(dateTime));
+
         PlayerPrefs.Save();
     }
 
@@ -126,5 +166,10 @@ public class LeaderBoard : MonoBehaviour {
     private static string GetHighscoreKeyNameForScene(string sceneName)
     {
         return "Highscore_" + sceneName;
+    }
+
+    private static string GetHighscoreDateKeyNameForScene(string sceneName)
+    {
+        return "HighscoreDate_" + sceneName;
     }
 }

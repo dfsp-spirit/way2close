@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LevelUIController : MonoBehaviour {
 
@@ -132,12 +133,12 @@ public class LevelUIController : MonoBehaviour {
 
         if (LeaderBoard.IsGlobalHighscore(gameScore))
         {
-            LeaderBoard.SetGlobalHighscore(gameScore);
+            LeaderBoard.SetGlobalHighscore(gameScore, DateTime.Now);
         }
 
         if(LeaderBoard.IsLevelHighscoreBySceneName(SceneManager.GetActiveScene().name, levelScore))
         {
-            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore);
+            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore, DateTime.Now);
         }
 
     }

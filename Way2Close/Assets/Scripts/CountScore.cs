@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
 
 public class CountScore : MonoBehaviour {
 
@@ -222,14 +223,14 @@ public class CountScore : MonoBehaviour {
         if (levelScore > beginningHighscoreThisLevel)
         {
             levelHighscore = true;
-            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore);
+            LeaderBoard.SetHighscoreForLevelBySceneName(SceneManager.GetActiveScene().name, levelScore, DateTime.Now);
             textDeadLine1.text = "New Highscore for level!";
             textDeadLine2.text = levelScore.ToString("n2");
         }        
         if(gameScore > beginningHighScoreTotalEver)
         {
             gameHighscore = true;
-            LeaderBoard.SetGlobalHighscore(gameScore);
+            LeaderBoard.SetGlobalHighscore(gameScore, DateTime.Now);
             textDeadLine1.text = "New total Highscore!";
             textDeadLine2.text = gameScore.ToString("n2");
         }

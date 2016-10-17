@@ -2,12 +2,13 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using System;
 public class MainMenuController : MonoBehaviour {
 
     public GameObject panelMain;
     public GameObject panelLevelSelect;
     public GameObject panelAbout;
+    public GameObject panelHighScores;
 
     void Start()
     {
@@ -62,6 +63,11 @@ public class MainMenuController : MonoBehaviour {
         ShowMenuPanelLevelSelect();
     }
 
+    public void ClickHighScoresDone()
+    {
+        ShowMenuPanelMain();
+    }
+
     public void ClickAboutOk()
     {
         ShowMenuPanelMain();
@@ -72,6 +78,7 @@ public class MainMenuController : MonoBehaviour {
         panelMain.SetActive(true);
         panelLevelSelect.SetActive(false);
         panelAbout.SetActive(false);
+        panelHighScores.SetActive(false);
     }
 
     public void ShowMenuPanelAbout()
@@ -79,15 +86,25 @@ public class MainMenuController : MonoBehaviour {
         panelMain.SetActive(false);
         panelLevelSelect.SetActive(false);
         panelAbout.SetActive(true);
+        panelHighScores.SetActive(false);
     }
 
-    
+    public void ShowMenuPanelHighScores()
+    {
+        panelMain.SetActive(false);
+        panelLevelSelect.SetActive(false);
+        panelAbout.SetActive(false);
+        panelHighScores.SetActive(true);
+    }
+
+
 
     public void ShowMenuPanelLevelSelect()
     {
         panelMain.SetActive(false);
         panelLevelSelect.SetActive(true);
         panelAbout.SetActive(false);
+        panelHighScores.SetActive(false);
 
         SetUnlockedLevelsInLevelSelectPanel();
         SetButtonLablesInLevelSelectPanel();
@@ -100,9 +117,68 @@ public class MainMenuController : MonoBehaviour {
         {
             Button b = getLevelSelectButtonForLevel(levelIndex);
             b.GetComponentInChildren<Text>().text = "Level " + levelIndex + ": " + levelFancyNames[levelIndex];
-        }
+        }        
+    }
 
-        
+    void PopulateHighScoresInfoPanel()
+    {
+        Button highScoresTotal = GetTotalHighScoresInfoButton();
+        highScoresTotal.GetComponentInChildren<Text>().text = GenerateTotalHighScoreText();
+
+        Button highScoresPerLevel = GetPerLevelHighScoresInfoButton();
+        highScoresPerLevel.GetComponentInChildren<Text>().text = GeneratePerLevelHighScoreText();
+    }
+
+    string GenerateTotalHighScoreText()
+    {
+        float score = LeaderBoard.GetGlobalHighscore();
+        string date = LeaderBoard.GetGlobalHighscoreDateString();
+        return date + ": " + score;
+    }
+
+    string GeneratePerLevelHighScoreText()
+    {
+        string t = "";
+
+        float score;
+        string date;
+        string levelSceneName;
+
+        string[] levelSceneNames = LevelManager.getLevelSceneNames();
+        for (int levelIndex = 0; levelIndex < levelSceneNames.Length; levelIndex++)
+        {
+            levelSceneName = levelSceneNames[levelIndex];
+            score = LeaderBoard.GetHighscoreForLevelBySceneName(levelSceneName);
+            date = LeaderBoard.GetHighscoreDateStringForLevelBySceneName(levelSceneName);
+            t += (date + ": " + score + "\n");
+        }
+        return t;
+    }
+
+    Button GetTotalHighScoresInfoButton()
+    {
+        Button[] buttons = panelHighScores.GetComponentsInChildren<Button>();
+        foreach (Button b in buttons)
+        {
+            if (b.name == "ButtonDisabledHighScoresTotal")
+            {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    Button GetPerLevelHighScoresInfoButton()
+    {
+        Button[] buttons = panelHighScores.GetComponentsInChildren<Button>();
+        foreach (Button b in buttons)
+        {
+            if (b.name == "ButtonDisabledHighScoresPerLevel")
+            {
+                return b;
+            }
+        }
+        return null;
     }
 
     void SetUnlockedLevelsInLevelSelectPanel()
