@@ -103,6 +103,9 @@ public class MainMenuController : MonoBehaviour {
         panelAbout.SetActive(false);
         panelHighScores.SetActive(true);
 
+        Button b = getHighScorePanelCloseButton();
+        b.gameObject.SetActive(true);
+       
         PopulateHighScoresInfoPanel();
     }
 
@@ -228,6 +231,19 @@ public class MainMenuController : MonoBehaviour {
         {
             b.interactable = state;
         }
+    }
+
+    Button getHighScorePanelCloseButton()
+    {
+        Button[] buttons = panelHighScores.GetComponentsInChildren<Button>();
+        foreach (Button b in buttons)
+        {
+            if (b.name == "ButtonHighScoresBack")
+            {
+                return b;
+            }
+        }
+        return null;
     }
 
     Button getLevelSelectButtonForLevel(int levelIndex)

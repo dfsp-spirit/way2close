@@ -13,10 +13,40 @@ public class SpawnEnemies : MonoBehaviour {
 
     GameObject activePrefab;
     private bool randomEnemies;
+    float ySpawnBorderTop;
+    float ySpawnBorderBottom;
+
+    public float YSpawnBorderTop
+    {
+        get
+        {
+            return ySpawnBorderTop;
+        }
+
+        set
+        {
+            ySpawnBorderTop = value;
+        }
+    }
+
+    public float YSpawnBorderBottom
+    {
+        get
+        {
+            return ySpawnBorderBottom;
+        }
+
+        set
+        {
+            ySpawnBorderBottom = value;
+        }
+    }
 
     // Use this for initialization
     void Start()
     {
+        YSpawnBorderTop = 0.0F;
+        YSpawnBorderBottom = Screen.height;
         currentWave = 0;        
         waveText.text = "Wave " + currentWave.ToString();
         SetUseRandomEnemyFromPrefabs();
@@ -69,17 +99,36 @@ public class SpawnEnemies : MonoBehaviour {
         objectRenderHeight = enemy.GetComponent<Renderer>().bounds.size.y;
 
         Vector3 spawnPos = new Vector3();
-        float randVal = Random.Range(0.0F, (Screen.width * 0.9F));
+        float randValXShift = Random.Range(0.0F, (Screen.width * 0.9F));
 
-        spawnPos.x = Screen.width + objectRenderWidth + randVal;
+        spawnPos.x = Screen.width + objectRenderWidth + randValXShift;
         //Debug.Log("Spawning background enemy in main menu, adding random value " + randVal.ToString() + " to x coord. Resulting value is " + spawnPos.x.ToString() + ".");
-        spawnPos.y = Random.Range(0 + objectRenderHeight, Screen.height - objectRenderHeight);
+        Debug.Log("Spawn borders y in screen coords are: ySpawnBorderTop=" + this.ySpawnBorderTop + ", this.ySpawnBorderBottom=" + this.ySpawnBorderBottom);
+        
+        float minSpawnYTop = getMinYSpawnPosAtTopForPrefab(enemy);
+        float maxSpawnYBottom = getMaxYSpawnPosAtBottomForPrefab(enemy);
+
+        Debug.Log("Spawning enemy type " + enemy.name + " in level between y coords " + minSpawnYTop + " and " + maxSpawnYBottom + ". Enemy render height is " + objectRenderHeight + ", render width is " + objectRenderHeight + ".");
+
+        spawnPos.y = Random.Range(minSpawnYTop, maxSpawnYBottom);
         spawnPos.z = 0.0F;
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
         worldPos.z = 0;
 
         Instantiate(enemy, worldPos, Quaternion.identity);
+    }
+
+    private float getMinYSpawnPosAtTopForPrefab(GameObject prefab)
+    {
+        float objectRenderHeight = prefab.GetComponent<Renderer>().bounds.size.y;
+        return this.ySpawnBorderTop + objectRenderHeight;
+    }
+
+    private float getMaxYSpawnPosAtBottomForPrefab(GameObject prefab)
+    {
+        float objectRenderHeight = prefab.GetComponent<Renderer>().bounds.size.y;
+        return this.ySpawnBorderBottom - objectRenderHeight;
     }
 
     public void SpawnAtWorldPosition(Vector3 worldPos)

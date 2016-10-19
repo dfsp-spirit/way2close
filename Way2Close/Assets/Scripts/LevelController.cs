@@ -15,7 +15,7 @@ public abstract class LevelController : MonoBehaviour {
     protected GameObject gameController;
 
     public static float showPanelDuration = 5.0F;
-    public static float showNextPanelInTime = 8.0F;
+    public static float showNextPanelInTime = 7.0F;
     public static float uiFadeDuration = 1.0F;
 
     protected ObstacleSpawner obstacleSpawner;
