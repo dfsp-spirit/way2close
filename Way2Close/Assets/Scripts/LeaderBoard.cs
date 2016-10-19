@@ -140,6 +140,17 @@ public class LeaderBoard : MonoBehaviour {
         }
     }
 
+    public static void ResetAllHighScoresToZero()
+    {
+        LeaderBoard.SetGlobalHighscore(0.0F, DateTime.Now);
+        string[] levelSceneNames = LevelManager.getLevelSceneNames();
+        foreach(string scene in levelSceneNames)
+        {
+            LeaderBoard.SetHighscoreForLevelBySceneName(scene, 0.0F, DateTime.Now);
+        }
+        
+    }
+
     public static void SetGlobalHighscore(float score, DateTime dateTime)
     {
         string scoreKey = LeaderBoard.highScoreTotalEverKey;

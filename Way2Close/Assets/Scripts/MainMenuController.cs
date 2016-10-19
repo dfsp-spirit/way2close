@@ -15,6 +15,9 @@ public class MainMenuController : MonoBehaviour {
         LeaderBoard.ResetScoreThisGame();
         LeaderBoard.SetGameModeThisGame(LeaderBoard.GAMEMODE_NONE_YET);
 
+        // Comment out the next line to save highscores in release!
+        //LeaderBoard.ResetAllHighScoresToZero();
+
         ShowMenuPanelMain();
     }
 
@@ -95,6 +98,8 @@ public class MainMenuController : MonoBehaviour {
         panelLevelSelect.SetActive(false);
         panelAbout.SetActive(false);
         panelHighScores.SetActive(true);
+
+        PopulateHighScoresInfoPanel();
     }
 
 
@@ -133,7 +138,18 @@ public class MainMenuController : MonoBehaviour {
     {
         float score = LeaderBoard.GetGlobalHighscore();
         string date = LeaderBoard.GetGlobalHighscoreDateString();
-        return date + ": " + score;
+        string fullDateInfo = "";
+        string fullScoreInfo = score.ToString("n2") + " points";
+        if (date != "")
+        {
+            fullDateInfo = " @ " + date;
+        }
+        if(score <= 0.1F)
+        {
+            fullScoreInfo = "none";
+            fullDateInfo = "";
+        }
+        return fullScoreInfo + fullDateInfo;
     }
 
     string GeneratePerLevelHighScoreText()
@@ -150,7 +166,18 @@ public class MainMenuController : MonoBehaviour {
             levelSceneName = levelSceneNames[levelIndex];
             score = LeaderBoard.GetHighscoreForLevelBySceneName(levelSceneName);
             date = LeaderBoard.GetHighscoreDateStringForLevelBySceneName(levelSceneName);
-            t += (date + ": " + score + "\n");
+            string fullDateInfo = "";
+            string fullScoreInfo = score.ToString("n2") + " points";
+            if (date != "")
+            {
+                fullDateInfo = " @ " + date;
+            }
+            if (score <= 0.1F)
+            {
+                fullScoreInfo = "none";
+                fullDateInfo = "";
+            }
+            t += ("Level " + levelIndex + ": " + fullScoreInfo + fullDateInfo + "\n");
         }
         return t;
     }
