@@ -34,6 +34,15 @@ public class LevelManager : MonoBehaviour {
         return false;
     }
 
+    public static int getNumLevelsTotal()
+    {
+        if(LevelManager.levelFancyNames.Count != LevelManager.levelSceneNames.Count)
+        {
+            Debug.Log("ERROR: Level fancy names and level scene name list must have same size but do not.");
+        }
+        return LevelManager.levelFancyNames.Count;
+    }
+
     private int GetCurrentLevelIndex()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
@@ -102,10 +111,40 @@ public class LevelManager : MonoBehaviour {
 
     public static void UnlockLevelByLevelIndex(int levelIndex)
     {
-        Debug.Log("LevelManager unlocked level with index " + levelIndex);
+        //Debug.Log("LevelManager unlocked level with index " + levelIndex);
         string keyName = LevelManager.getLevelUnlockedKeyForLevelByLevelIndex(levelIndex);
         PlayerPrefs.SetInt(keyName, 1);
         PlayerPrefs.Save();
+    }
+
+    public static void LockLevelByLevelIndex(int levelIndex)
+    {
+        //Debug.Log("LevelManager locked level with index " + levelIndex);
+        string keyName = LevelManager.getLevelUnlockedKeyForLevelByLevelIndex(levelIndex);
+        PlayerPrefs.SetInt(keyName, 0);
+        PlayerPrefs.Save();
+    }
+
+    // function for debugging/testing only
+    public static void UnlockAllLevels()
+    {
+        int numLevels = LevelManager.getNumLevelsTotal();
+        for(int i = 0; i < numLevels; i++)
+        {
+            LevelManager.UnlockLevelByLevelIndex(i);
+        }
+        Debug.Log("LevelManager: Unlocked all " + numLevels + " levels.");
+    }
+
+    // function for debugging/testing only
+    public static void LockAllLevels()
+    {
+        int numLevels = LevelManager.getNumLevelsTotal();
+        for (int i = 0; i < numLevels; i++)
+        {
+            LevelManager.LockLevelByLevelIndex(i);
+        }
+        Debug.Log("LevelManager: Locked all " + numLevels + " levels.");
     }
 
     public static string[] getLevelSceneNames()

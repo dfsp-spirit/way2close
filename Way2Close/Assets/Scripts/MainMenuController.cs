@@ -18,6 +18,10 @@ public class MainMenuController : MonoBehaviour {
         // Comment out the next line to save highscores in release!
         //LeaderBoard.ResetAllHighScoresToZero();
 
+        // Comment out the next two lines in release!
+        //LevelManager.UnlockAllLevels();
+        //LevelManager.LockAllLevels();
+
         ShowMenuPanelMain();
     }
 
