@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Level0Controller : LevelController {
 
-    private int numInitialEnemies = 6;
+    private int numInitialEnemies = 2;
     private int numEnemiesAddedPerWave = 2;
-    private int maxWave = 5;
+    private int maxWave = 4;
     GameObject player;
     SpawnEnemies spawner;
 

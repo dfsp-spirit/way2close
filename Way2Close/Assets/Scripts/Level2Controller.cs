@@ -15,7 +15,8 @@ public class Level2Controller : LevelController
     protected float WORLD_Y_CENTER = 0.0F;
     protected float WORLD_UPPER_BORDER_EDGE_Y = 4.15F;
     protected float WORLD_LOWER_BORDER_EDGE_Y = -4.15F;
-    
+    protected float ENEMY_SPAWN_POS_X = 5.0F;
+
 
 
 
@@ -71,22 +72,28 @@ public class Level2Controller : LevelController
 
         spawner.SetUseRandomEnemyFromPrefabs();
 
-        Invoke("SpawnWave2", showNextPanelInTime);
+        Invoke("SpawnWave0", showNextPanelInTime);
     }
 
     void SpawnWave0()
     {
         spawner.SetCurrentWave(0);
 
-        Debug.Log("Spawning obstacle.");        
+        Debug.Log("Spawning obstacle.");
 
-        obstacleSpawner.SpawnPosition = new Vector3(5.0F, 0.0F, 0.0F);
-        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTrapez);
+        //obstacleSpawner.SpawnPosition = new Vector3(5.0F, 0.0F, 0.0F);
+        //obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTrapez);
 
-        obstacleSpawner.SpawnPosition = new Vector3(5.0F, 2.0F, 0.0F);
-        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTriangle);
+        //obstacleSpawner.SpawnPosition = new Vector3(5.0F, 2.0F, 0.0F);
+        //obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesTriangle);
 
-        obstacleSpawner.SpawnPosition = new Vector3(5.0F, -2.0F, 0.0F);
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, 0.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesRectangle);
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, 3.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesRectangle);
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, -3.0F, 0.0F);
         obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.verticesRectangle);
 
         Invoke("SpawnWave1", showNextPanelInTime);
@@ -95,6 +102,50 @@ public class Level2Controller : LevelController
     void SpawnWave1()
     {
         spawner.SetCurrentWave(1);
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, 0.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomSquareVertices(2.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 2.0F, 2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomSquareVertices(1.5F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 4.0F, -1.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomSquareVertices(3.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 1.0F, 3.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomSquareVertices(1.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 3.0F, -2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomSquareVertices(3.5F));
+
+        Invoke("SpawnWave2", showNextPanelInTime);
+    }
+
+    void SpawnWave2()
+    {
+        spawner.SetCurrentWave(2);
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, 2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomRectangleVertices(5.0F, 1.0F));
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X, -1.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomRectangleVertices(5.0F, 1.0F));
+
+
+
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 5.0F, 2.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomRectangleVertices(5.0F, 1.0F));
+        
+        obstacleSpawner.SpawnPosition = new Vector3(ENEMY_SPAWN_POS_X + 5.0F, -1.0F, 0.0F);
+        obstacleSpawner.SpawnObstaclePolygon("Obstacle", ObstacleSpawner.getCustomRectangleVertices(5.0F, 1.0F));
+
+
+        Invoke("SpawnWave3", showNextPanelInTime * 1.5F);
+    }
+
+    void SpawnWave3()
+    {
+        spawner.SetCurrentWave(3);
 
         obstacleSpawner.SpawnPosition = new Vector3(0.0F, 0.0F, 0.0F);
         obstacleSpawner.Spawn4FacePolyAtBottomBorderFromTo("Obstacle", new Vector2(0.0F, 0.0F), new Vector2(2.0F, 2.0F));
@@ -114,12 +165,12 @@ public class Level2Controller : LevelController
         obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(2.0F, 2.0F), new Vector2(6.0F, 2.0F), currentTunnelSegmentHeight);
         obstacleSpawner.SpawnTunnelSegmentDefinedByBottom(new Vector2(6.0F, 2.0F), new Vector2(10.0F, -2.0F), currentTunnelSegmentHeight);
 
-        Invoke("SpawnWave2", showNextPanelInTime * 3.0F);
+        Invoke("SpawnWave4", showNextPanelInTime * 3.0F);
     }
 
-    void SpawnWave2()
+    void SpawnWave4()
     {
-        spawner.SetCurrentWave(2);
+        spawner.SetCurrentWave(4);
         obstacleSpawner.SpawnPosition = new Vector3(0.0F, 0.0F, 0.0F);
 
         float rampStartX = 0.0F;

@@ -72,7 +72,7 @@ public class Level3Controller : LevelController
 
     override protected int GetCurrentLevelIndex()
     {
-        return 0;
+        return 3;
     }
 
 }

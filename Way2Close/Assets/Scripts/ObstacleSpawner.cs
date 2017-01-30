@@ -19,11 +19,18 @@ public class ObstacleSpawner : PolygonSpawner {
             new Vector2(6.0F, 0.0F)
         };
 
-    public static Vector2[] verticesRectangle = new Vector2[] {
+    public static Vector2[] verticesSquare = new Vector2[] {
             new Vector2(0.0F, 0.0F),
             new Vector2(0.0F, 1.0F),
             new Vector2(1.0F, 1.0F),
             new Vector2(1.0F, 0.0F)
+        };
+
+    public static Vector2[] verticesRectangle = new Vector2[] {
+            new Vector2(0.0F, 0.0F),
+            new Vector2(0.0F, 1.0F),
+            new Vector2(3.0F, 1.0F),
+            new Vector2(3.0F, 0.0F)
         };
 
     public static Vector2[] verticesTriangle = new Vector2[] {
@@ -31,6 +38,26 @@ public class ObstacleSpawner : PolygonSpawner {
             new Vector2(1.0F, 1.0F),
             new Vector2(1.0F, 0.0F),
         };
+
+    public static Vector2[] getCustomSquareVertices(float w)
+    {
+        return new Vector2[] {
+            new Vector2(0.0F, 0.0F),
+            new Vector2(0.0F, w),
+            new Vector2(w, w),
+            new Vector2(w, 0.0F)
+        };
+    }
+
+    public static Vector2[] getCustomRectangleVertices(float w, float h)
+    {
+        return new Vector2[] {
+            new Vector2(0.0F, 0.0F),
+            new Vector2(0.0F, h),
+            new Vector2(w, h),
+            new Vector2(w, 0.0F)
+        };
+    }
 
     public float ObstacleSpeed
     {
