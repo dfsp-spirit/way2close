@@ -20,6 +20,12 @@ public abstract class LevelController : MonoBehaviour {
 
     protected ObstacleSpawner obstacleSpawner;
 
+    // Use these to determine the spawn position of objects (you have to handle, i.e., add or remove, the render width though)
+    protected float rightScreenBorderWorldPos;
+    protected float leftScreenBorderWorldPos;
+    protected float topScreenBorderWorldPos;
+    protected float bottomScreenBorderWorldPos;
+
     protected virtual void Start()
     {
         gameController = GameObject.Find("GameController");
@@ -30,6 +36,71 @@ public abstract class LevelController : MonoBehaviour {
         obstacleSpawner.ResultingGameObjectColliderType = PolygonSpawner.ColliderType.Polygon2D;
         obstacleSpawner.ResultingGameObjectSortingLayerName = "Front";
         obstacleSpawner.ResultingGameObjectTag = "Obstacle";
+
+        rightScreenBorderWorldPos = this.getRightScreenBorderXWorldPos();
+        leftScreenBorderWorldPos = this.getLeftScreenBorderXWorldPos();
+        topScreenBorderWorldPos = this.getTopScreenBorderYWorldPos();
+        bottomScreenBorderWorldPos = this.getBottomScreenBorderYWorldPos();
+
+        Debug.Log("[LevelController] Determined screen borders in world coords: right=" + rightScreenBorderWorldPos + ", left=" + leftScreenBorderWorldPos + ", top=" + topScreenBorderWorldPos + ", bottom=" + bottomScreenBorderWorldPos + ".");
+    }
+
+    protected float getRightScreenBorderXWorldPos()
+    {
+        Vector3 spawnPos = new Vector3();
+        spawnPos.x = Screen.width;
+        spawnPos.y = 0.0F;
+        spawnPos.z = 0.0F;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
+        worldPos.z = 0;
+
+        return worldPos.x;
+    }
+
+    protected float getLeftScreenBorderXWorldPos()
+    {
+        Vector3 spawnPos = new Vector3();
+
+        float screenStartLeft = 0.0F;
+
+        spawnPos.x = screenStartLeft;
+        spawnPos.y = 0.0F;
+        spawnPos.z = 0.0F;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
+        worldPos.z = 0;
+
+        return worldPos.x;
+    }
+
+    protected float getTopScreenBorderYWorldPos()
+    {
+        Vector3 spawnPos = new Vector3();
+        spawnPos.x = 0.0F;
+        spawnPos.y = Screen.height;
+        spawnPos.z = 0.0F;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
+        worldPos.z = 0;
+
+        return worldPos.y;
+    }
+
+    protected float getBottomScreenBorderYWorldPos()
+    {
+        Vector3 spawnPos = new Vector3();
+
+        float screenStartBottom = 0.0F;
+
+        spawnPos.x = 0.0F;
+        spawnPos.y = screenStartBottom;
+        spawnPos.z = 0.0F;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(spawnPos);
+        worldPos.z = 0;
+
+        return worldPos.y;
     }
 
     protected void ShowPanel()

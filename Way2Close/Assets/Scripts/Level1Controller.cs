@@ -12,7 +12,7 @@ public class Level1Controller : LevelController {
     protected float WORLD_Y_TOP = +5.0F;
     protected float WORLD_Y_BOTTOM = -5.0F;
     protected float WORLD_Y_CENTER = 0.0F;
-    
+
 
     // Use this for initialization
     protected override void Start () {
@@ -62,7 +62,10 @@ public class Level1Controller : LevelController {
     {
         spawner.SetCurrentWave(0);
 
+        float x = this.getRightScreenBorderXWorldPos();
+
         firstPos = new Vector3(WORLD_X_RIGHT_BORDER, -5.0F, 0.0F);
+        //firstPos = new Vector3(x, -5.0F, 0.0F);
         spawner.SpawnLine(firstPos, 8, spawner.GetShiftVectorDiagonalUp());        
 
         Invoke("SpawnWave1", (showNextPanelInTime * 1.0F));
