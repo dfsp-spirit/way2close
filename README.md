@@ -6,6 +6,7 @@ Way2Close is a simple space game about avoiding to crash into obstacles and enem
 
 The gameplay of Way2Close in inspired by some one-button game a friend of mine had on his Palm in 2002. The graphics style is inspired by a demo for Processing.js.
 
+![Vis](./release/v0.2.0/screenshots/phone/way2close_tutorial.jpg?raw=true "Way2Close gameplay, totorial level.")
 ![Vis](./release/v0.2.0/screenshots/phone/way2close_menu.jpg?raw=true "The Way2Close menu")
 
 ## Tech
