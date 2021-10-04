@@ -1,17 +1,18 @@
 # Way2Close
-Way2Close -- a simple Unity game project.
+Way2Close -- a simple Unity space action game project.
+
 
 ## About
-Way2Close is a simple space game about avoiding to crash into obstacles and enemies. You get points for flying close to them though.
+Way2Close is a space game about avoiding to crash into obstacles and enemies -- but you get points for flying close to them.
 
-The gameplay of Way2Close in inspired by some one-button game a friend of mine had on his Palm in 2002. The graphics style is inspired by a demo for Processing.js.
+The gameplay of Way2Close in inspired by some one-button game a friend of mine had on his Palm in 2002. The graphics style is inspired by a demo for Processing.js. 
+
+I built it to have a look at C# and at the Unity engine. The game is quite simple, it has only very limited sound effects and graphics, but it's fully playable and has a high score list. 
 
 ![Vis](./release/v0.2.0/screenshots/phone/way2close_tutorial.jpg?raw=true "Way2Close gameplay, totorial level.")
 ![Vis](./release/v0.2.0/screenshots/phone/way2close_gameplay.jpg?raw=true "Way2Close gameplay.")
 ![Vis](./release/v0.2.0/screenshots/phone/way2close_menu.jpg?raw=true "The Way2Close menu.")
 
-## Tech
-Way2Close is written in C# and is based on the Unity game engine.
 
 ## Installation
 
