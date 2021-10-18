@@ -5,7 +5,7 @@ Way2Close -- a simple Unity space action game project.
 ## About
 Way2Close is a space game about avoiding to crash into obstacles and enemies -- but you get points for flying close to them.
 
-The gameplay of Way2Close in inspired by some one-button game a friend of mine had on his Palm in 2002. The graphics style is inspired by a demo for Processing.js. 
+The gameplay of Way2Close in inspired by some one-button game a friend of mine had on his Palm in 2002. The graphics style is inspired by a demo for Processing.js, from which I built an early version of the game called *pRace* that [can be played here directly in the browser](http://rcmd.org/projects/prace/).
 
 I built it to have a look at C# and at the Unity engine. The game is quite simple, it has only very limited sound effects and graphics, but it's fully playable and has a high score list. 
 
